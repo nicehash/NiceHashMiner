@@ -858,7 +858,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.Instance.AddEventBundleApplied(true, bundle.Name);
+                        EventManager.Instance.AddEventBundleApplied(bundle.Name,true);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -891,8 +891,8 @@ namespace NHMCore.Nhmws.V4
                     var dev = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID);
                     if (dev != null)
                     {
-                        if (eventRet == EventType.TestOCApplied) EventManager.Instance.AddEventTestOCApplied(true, dev.Name, dev.B64Uuid);
-                        else EventManager.Instance.AddEventTestOCFailed(true, dev.Name, dev.B64Uuid);
+                        if (eventRet == EventType.TestOCApplied) EventManager.Instance.AddEventTestOCApplied(dev.Name, dev.B64Uuid, true);
+                        else EventManager.Instance.AddEventTestOCFailed(dev.Name, dev.B64Uuid, true);
                     }
                     break;
                 case SupportedAction.ActionOcProfileTestStop:

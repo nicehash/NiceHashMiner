@@ -102,14 +102,14 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventDevEnabled(bool send = true, string devName = "", string devID = "")
+        public void AddEventDevEnabled(string devName, string devID, bool send = true)
         {
             var type = EventType.DeviceEnabled;
             var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName });
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
-        public void AddEventDevDisabled(bool send = true, string devName = "", string devID = "")
+        public void AddEventDevDisabled(string devName, string devID, bool send = true)
         {
             var type = EventType.DeviceDisabled;
             var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName });
@@ -124,7 +124,7 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventPluginFail(bool send = true, string pluginName = "")
+        public void AddEventPluginFail(string pluginName, bool send = true)
         {
             var type = EventType.PluginFailiure;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
@@ -162,7 +162,7 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventDeviceOverheating(bool send = true, string gpuName = "", string devID = "")
+        public void AddEventDeviceOverheating(string gpuName, string devID, bool send = true)
         {
             var type = EventType.DeviceOverheat;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
@@ -176,30 +176,30 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow() };
             AddEvent(type, ev, send);
         }
-        public void AddEventSwitch(bool send = true, string oldAlgo = "", string newAlgo = "")
+        public void AddEventSwitch(string oldAlgo, string newAlgo, bool send = true)
         {
             var type = EventType.AutoSwitch;
             var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoNameOld = oldAlgo, AlgoNameNew = newAlgo });
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventAlgoEnabled(bool send = true, string algo = "")
+        public void AddEventAlgoEnabled(string deviceID, string plugin, List<string> algos, bool send = true)
         {
             var type = EventType.AlgoEnabled;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
-            var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoName = algo, RigName = worker });
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { PluginName = plugin, AlgoNames = algos, RigName = worker });
+            var ev = new NhmwsEvent() { EventID = (int)type, DeviceID = deviceID, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventAlgoDisabled(bool send = true, string algo = "")
+        public void AddEventAlgoDisabled(string deviceID, string plugin, List<string> algos, bool send = true)
         {
             var type = EventType.AlgoDisabled;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
-            var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoName = algo, RigName = worker });
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { PluginName = plugin, AlgoNames = algos, RigName = worker });
+            var ev = new NhmwsEvent() { EventID = (int)type, DeviceID = deviceID, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventTestOCApplied(bool send = true, string devName = "", string devID = "")
+        public void AddEventTestOCApplied(string devName, string devID, bool send = true)
         {
             var type = EventType.TestOCApplied;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
@@ -207,7 +207,7 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
-        public void AddEventTestOCFailed(bool send = true, string devName = "", string devID = "")
+        public void AddEventTestOCFailed(string devName, string devID, bool send = true)
         {
             var type = EventType.TestOCFailed;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
@@ -215,7 +215,7 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
-        public void AddEventBundleApplied(bool send = true, string bundle = "")
+        public void AddEventBundleApplied(string bundle, bool send = true)
         {
             var type = EventType.BundleApplied;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
@@ -223,7 +223,7 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventBenchmarkFailed(bool send = true, string plugin = "", string algo = "", string gpu = "", string devID = "")
+        public void AddEventBenchmarkFailed(string plugin, string algo, string gpu, string devID, bool send = true)
         {
             var type = EventType.BenchmarkFailed;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;

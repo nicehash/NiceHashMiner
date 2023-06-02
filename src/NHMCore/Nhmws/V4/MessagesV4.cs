@@ -767,5 +767,7 @@ namespace NHMCore.Nhmws.V4
         public string AlgoNameNew { get; set; }
         [JsonProperty("bundle_name", NullValueHandling = NullValueHandling.Ignore)]
         public string BundleName { get; set; }
+        [JsonProperty("algo_names", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> AlgoNames { get; set; } = new List<string>();
     }
 }

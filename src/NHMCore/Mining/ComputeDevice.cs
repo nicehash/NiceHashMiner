@@ -71,8 +71,8 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
                 if (B64Uuid == null || B64Uuid == string.Empty || B64Uuid == "-1") return; //initial stuff
                 var eventType = value ? EventType.DeviceEnabled : EventType.DeviceDisabled;
-                if (value) EventManager.Instance.AddEventDevEnabled(true, Name, B64Uuid);
-                else EventManager.Instance.AddEventDevDisabled(true, Name, B64Uuid);
+                if (value) EventManager.Instance.AddEventDevEnabled(Name, B64Uuid, true);
+                else EventManager.Instance.AddEventDevDisabled(Name, B64Uuid, true);
             }
         }
 
@@ -196,6 +196,20 @@ namespace NHMCore.Mining
                         continue;
                     }
                     targets.ForEach(t => t.SetEnabled((bool)algo.Enabled));
+                }
+                var enabledAlgos = miner.Algos.Where(a => (bool)a.Enabled);
+                var disabledAlgos = miner.Algos.Where(a => (bool)!a.Enabled);
+                if(enabledAlgos != null && enabledAlgos.Count() > 0 && miner.Enabled)
+                {
+                    EventManager.Instance.AddEventAlgoEnabled(B64Uuid, miner.Id, enabledAlgos.Select(a => a.Id).ToList(), true);
+                }
+                if(disabledAlgos != null && disabledAlgos.Count() > 0)
+                {
+                    EventManager.Instance.AddEventAlgoDisabled(B64Uuid, miner.Id, disabledAlgos.Select(a => a.Id).ToList(), true);
+                }
+                else if (!miner.Enabled)
+                {
+                    EventManager.Instance.AddEventAlgoDisabled(B64Uuid, miner.Id, miner.Algos.Select(a => a.Id).ToList(), true);
                 }
             }
             Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());

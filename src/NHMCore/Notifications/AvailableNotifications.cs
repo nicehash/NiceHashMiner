@@ -180,7 +180,7 @@ namespace NHMCore.Notifications
 
         public static void CreateFailedBenchmarksInfo(ComputeDevice device, string algo, string plugin)
         {
-            EventManager.Instance.AddEventBenchmarkFailed(true, plugin, algo, device.Name, device.B64Uuid);
+            EventManager.Instance.AddEventBenchmarkFailed(plugin, algo, device.Name, device.B64Uuid, true);
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
             notification.Action = AvailableActions.ActionFailedBenchmarksHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.FailedBenchmarks);
