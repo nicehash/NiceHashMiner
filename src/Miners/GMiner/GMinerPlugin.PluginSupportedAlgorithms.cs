@@ -36,7 +36,7 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (6UL << 29)},
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
                     }
                 },
                 {
