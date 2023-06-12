@@ -597,7 +597,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     return new JArray(deviceStateToInt(d.State));
                 }
-                Logger.Warn(_TAG, $"\t[{d.BaseDevice.Name}](deviceState):{d.State} -- converted (int):{deviceStateToInt(d.State)}");
+                //Logger.Warn(_TAG, $"\t[{d.BaseDevice.Name}](deviceState):{d.State} -- converted (int):{deviceStateToInt(d.State)}");
 
                 return new MinerState.DeviceState
                 {
@@ -607,7 +607,7 @@ namespace NHMCore.Nhmws.V4
                     OptionalMutableValues = GetDeviceOptionalMutable(d, false).values, // omv
                 };
             }
-            Logger.Warn(_TAG, $"Miner state (rigstatus):{rig} -- converted (int):{rigStateToInt(rig)}");
+            //Logger.Warn(_TAG, $"Miner state (rigstatus):{rig} -- converted (int):{rigStateToInt(rig)}");
             return new MinerState
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
