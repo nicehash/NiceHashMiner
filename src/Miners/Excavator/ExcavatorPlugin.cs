@@ -31,11 +31,11 @@ namespace Excavator
 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.8.3.0",
-                ExePath = new List<string> { "NHQM_v0.6.3.0_RC", "excavator.exe" },
+                BinVersion = "v1.8.5.0",
+                ExePath = new List<string> { "NHQM_v0.6.5.0", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.3.0_RC/NHQM_v0.6.3.0_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.5.0/NHQM_v0.6.5.0.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -45,7 +45,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(19, 4);
+        public override Version Version => new Version(19, 5);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
@@ -75,7 +75,7 @@ namespace Excavator
             return supported;
         }
 
-        private static Version NVIDIA_Min_Version = new Version(411, 0);
+        private static Version NVIDIA_Min_Version = new Version(527, 41);
         private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedDevicesAndAlgorithms(IEnumerable<BaseDevice> devices)
         {
             bool isNVIDIADriverGreaterThanMinVersion() => CUDADevice.INSTALLED_NVIDIA_DRIVERS >= NVIDIA_Min_Version;
@@ -191,12 +191,12 @@ namespace Excavator
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(461, 33));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(527, 41));
         }
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(527, 41));
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
