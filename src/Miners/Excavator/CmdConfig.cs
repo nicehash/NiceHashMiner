@@ -6,6 +6,7 @@ using System.IO;
 using System.Globalization;
 using NHM.Common;
 using NHM.Common.Enums;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Excavator
 {
@@ -46,9 +47,17 @@ namespace Excavator
             return CreateDefaultTemplateAndCreateCMD("__SUBSCRIBE_PARAM_LOCATION__", "__SUBSCRIBE_PARAM_USERNAME__", gpuUuids, algorithmName);
         }
 
-        public static string CommandFileTemplatePath(string pluginUUID)
+        public static string CommandFileTemplatePath(string pluginUUID, string binPath, string fileName)
         {
-            return Paths.MinerPluginsPath(pluginUUID, "internals", "CommandLineTemplate.json");
+            Logger.Warn("CPUTEST", $"BINPATH: {binPath}");
+            Logger.Warn("CPUTEST", $"filename: {fileName}");
+            //Logger.Warn("CPUTEST", $"")
+            //var path = Getbin
+            //return Paths.MinerPluginsPath(pluginUUID, "bins", )
+            //return Paths.MinerPluginsPath(pluginUUID, "internals", fileName);
+            var path = Paths.MinerPluginsPath(pluginUUID, binPath, fileName);
+            Logger.Warn("CPUTEST", $"{path}");
+            return path;
         }
 
         private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string algorithmName)
@@ -58,11 +67,7 @@ namespace Excavator
                     new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
                     new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ algorithmName.ToLower() } },
                 };
-            if (algorithmName == "randomx")
-            {
-                initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=1", "USEMSR=1" } }));
-            }
-            else initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), dev.ToString() } }));
+            initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), dev.ToString() } }));
             return initialCommands;
         }
 
@@ -94,15 +99,38 @@ namespace Excavator
         private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add", "worker.add" };
         private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<int> excavatorIds, string subscribeLocation, string subscribeUsername, string algorithmName)
         {
+            Logger.Warn("TESTCPU", "DOES IT EXIST?");
+            Logger.Warn("TESTCPU", $"TEMPLATE FILE PATH::{templateFilePath}");
+            
             if (!File.Exists(templateFilePath)) return null;
             try
             {
+                Logger.Warn("TESTCPU", "BEFORE PARSE");
                 var template = JsonConvert.DeserializeObject<List<CommandList>>(File.ReadAllText(templateFilePath), _jsonSettings);
+                Logger.Warn("TESTCPU", "AFTER PARSE");
+
+                var a = template
+                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)));
+                Logger.Warn("TESTCPU", $"A COUNT: {a.Count()}");
+                var b = template
+                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
+                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()));
+                Logger.Warn("TESTCPU", $"B COUNT: {b.Count()}");
+
+                var c = template
+                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
+                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
+                    .Where(p => p.commands.Any());
+                Logger.Warn("TESTCPU", $"C COUNT: {c.Count()}");
+
+
+
                 var validCmds = template
                     .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
                     .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
                     .Where(p => p.commands.Any())
                     .ToArray();
+                Logger.Warn("TESTCPU", $"VALID CMD COUNT? {validCmds.Count()}");
                 foreach (var (cmd, commands) in validCmds)
                 {
                     cmd.Commands = commands;
@@ -115,7 +143,11 @@ namespace Excavator
                         Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, excavatorIds, algorithmName),
                     },
                 };
-                if (validCmds.Any()) commandListTemplate.AddRange(validCmds.Select(p => p.cmd));
+                if (validCmds.Any())
+                {
+                    Logger.Warn("TESTCPU", "THERE WERE SOME VALID COMMANDS");
+                    commandListTemplate.AddRange(validCmds.Select(p => p.cmd));
+                }
                 return JsonConvert.SerializeObject(commandListTemplate, Formatting.Indented, _jsonSettings);
             }
             catch (Exception e)
@@ -127,9 +159,11 @@ namespace Excavator
 
         private static string CreateCommandWithTemplate(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string templateFilePath, string algorithmName)
         {
+            Logger.Warn("TESTCPU", "EXCAVATOR CMD CONFIG CREATION");
             var template = ParseTemplateFileAndCreateCMD(templateFilePath, excavatorIds, subscribeLocation, subscribeUsername, algorithmName);
             if (template == null)
             {
+                Logger.Warn("TESTCPU", "TEMPLATE IS NULL");
                 Logger.Warn("Excavator.CmdConfig", "Template file not found, using default!");
                 template = CreateDefaultTemplateAndCreateCMD(subscribeLocation, subscribeUsername, excavatorIds, algorithmName);
             }
@@ -143,9 +177,9 @@ namespace Excavator
             return $"nhmp.auto.nicehash.com:443";
         }
 
-        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, params int[] excavatorIds) { 
+        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, string fileName, string binPath, params int[] excavatorIds) { 
             var miningLocation = GetMiningLocation(_miningLocation);
-            var templatePath = CommandFileTemplatePath(pluginUUID);
+            var templatePath = CommandFileTemplatePath(pluginUUID, binPath, fileName);
             var miningServiceLocation = GetServiceLocation(miningLocation);
             var command = CreateCommandWithTemplate(miningServiceLocation, username, excavatorIds, templatePath, algorithmName);
             if (command == null) Logger.Error("Excavator.CmdConfig", "command is NULL");

@@ -94,22 +94,22 @@ namespace Excavator
                 .ToDictionary(p => p.gpu, p => p.algos);
         }
 
-        private void CreateExcavatorCommandTemplate(IEnumerable<int> uuids, string algorithmName)
-        {
-            try
-            {
-                var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
-                var template = CmdConfig.CreateTemplate(uuids, algorithmName);
-                if (!File.Exists(templatePath) && template != null)
-                {
-                    File.WriteAllText(templatePath, template);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("ExcavatorPlugin", $"CreateExcavatorCommandTemplate {e}");
-            }
-        }
+        //private void CreateExcavatorCommandTemplate(IEnumerable<int> uuids, string algorithmName, string filename)
+        //{
+        //    try
+        //    {
+        //        var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID, filename);
+        //        var template = CmdConfig.CreateTemplate(uuids, algorithmName);
+        //        if (!File.Exists(templatePath) && template != null)
+        //        {
+        //            File.WriteAllText(templatePath, template);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Error("ExcavatorPlugin", $"CreateExcavatorCommandTemplate {e}");
+        //    }
+        //}
 
         protected override MinerBase CreateMinerBase()
         {

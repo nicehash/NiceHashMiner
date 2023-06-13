@@ -154,7 +154,9 @@ namespace Excavator
             var (excavatorIds, ids) = GetUUIDsAndIDs(_miningPairs);
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", excavatorIds)}.json";
-            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, AlgorithmName(_algorithmType), excavatorIds.ToArray());
+            var binPath = GetBinAndCwdPaths();
+            Logger.Warn("CPUTEST", $"CWD: {binPath.cwdPath}");
+            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, AlgorithmName(_algorithmType), fileName, binPath.cwdPath, excavatorIds.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
             var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;
