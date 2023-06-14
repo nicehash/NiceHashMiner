@@ -49,14 +49,7 @@ namespace Excavator
 
         public static string CommandFileTemplatePath(string pluginUUID, string binPath, string fileName)
         {
-            Logger.Warn("CPUTEST", $"BINPATH: {binPath}");
-            Logger.Warn("CPUTEST", $"filename: {fileName}");
-            //Logger.Warn("CPUTEST", $"")
-            //var path = Getbin
-            //return Paths.MinerPluginsPath(pluginUUID, "bins", )
-            //return Paths.MinerPluginsPath(pluginUUID, "internals", fileName);
             var path = Paths.MinerPluginsPath(pluginUUID, binPath, fileName);
-            Logger.Warn("CPUTEST", $"{path}");
             return path;
         }
 
@@ -99,38 +92,16 @@ namespace Excavator
         private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add", "worker.add" };
         private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<int> excavatorIds, string subscribeLocation, string subscribeUsername, string algorithmName)
         {
-            Logger.Warn("TESTCPU", "DOES IT EXIST?");
-            Logger.Warn("TESTCPU", $"TEMPLATE FILE PATH::{templateFilePath}");
-            
+           
             if (!File.Exists(templateFilePath)) return null;
             try
             {
-                Logger.Warn("TESTCPU", "BEFORE PARSE");
                 var template = JsonConvert.DeserializeObject<List<CommandList>>(File.ReadAllText(templateFilePath), _jsonSettings);
-                Logger.Warn("TESTCPU", "AFTER PARSE");
-
-                var a = template
-                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)));
-                Logger.Warn("TESTCPU", $"A COUNT: {a.Count()}");
-                var b = template
-                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
-                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()));
-                Logger.Warn("TESTCPU", $"B COUNT: {b.Count()}");
-
-                var c = template
-                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
-                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
-                    .Where(p => p.commands.Any());
-                Logger.Warn("TESTCPU", $"C COUNT: {c.Count()}");
-
-
-
                 var validCmds = template
                     .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
                     .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
                     .Where(p => p.commands.Any())
                     .ToArray();
-                Logger.Warn("TESTCPU", $"VALID CMD COUNT? {validCmds.Count()}");
                 foreach (var (cmd, commands) in validCmds)
                 {
                     cmd.Commands = commands;
@@ -145,7 +116,6 @@ namespace Excavator
                 };
                 if (validCmds.Any())
                 {
-                    Logger.Warn("TESTCPU", "THERE WERE SOME VALID COMMANDS");
                     commandListTemplate.AddRange(validCmds.Select(p => p.cmd));
                 }
                 return JsonConvert.SerializeObject(commandListTemplate, Formatting.Indented, _jsonSettings);
@@ -159,11 +129,9 @@ namespace Excavator
 
         private static string CreateCommandWithTemplate(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string templateFilePath, string algorithmName)
         {
-            Logger.Warn("TESTCPU", "EXCAVATOR CMD CONFIG CREATION");
             var template = ParseTemplateFileAndCreateCMD(templateFilePath, excavatorIds, subscribeLocation, subscribeUsername, algorithmName);
             if (template == null)
             {
-                Logger.Warn("TESTCPU", "TEMPLATE IS NULL");
                 Logger.Warn("Excavator.CmdConfig", "Template file not found, using default!");
                 template = CreateDefaultTemplateAndCreateCMD(subscribeLocation, subscribeUsername, excavatorIds, algorithmName);
             }

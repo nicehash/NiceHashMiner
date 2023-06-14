@@ -45,7 +45,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(19, 5);
+        public override Version Version => new Version(19, 7);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
@@ -143,6 +143,7 @@ namespace Excavator
                 foreach (var file in dirInfo.GetFiles())
                 {
                     try {
+                        if (file.Name.Contains("cmd_")) continue;
                         if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete();
                     }
                     catch (Exception e)
