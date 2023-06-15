@@ -6,7 +6,6 @@ using System.IO;
 using System.Globalization;
 using NHM.Common;
 using NHM.Common.Enums;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Excavator
 {
@@ -53,14 +52,28 @@ namespace Excavator
             return path;
         }
 
-        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string algorithmName)
+        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string algorithmName, List<Command> mandatoryCMDS = null)
         {
             var initialCommands = new List<Command>
                 {
                     new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
                     new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ algorithmName.ToLower() } },
                 };
-            initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), dev.ToString() } }));
+            if (algorithmName == "randomx")
+            {
+                initialCommands.AddRange(excavatorIds.Select((dev, index) =>  new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=1", "USEMSR=1" } }));
+                if(mandatoryCMDS != null)
+                {
+                    foreach (var c in initialCommands)
+                    {
+                        var crossRef = mandatoryCMDS.FirstOrDefault(m => m.Id == c.Id);
+                        if (crossRef == null) continue;
+                        c.Params = crossRef.Params;
+                    }   
+                }
+
+            }
+            else initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), dev.ToString() } }));
             return initialCommands;
         }
 
@@ -102,6 +115,15 @@ namespace Excavator
                     .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
                     .Where(p => p.commands.Any())
                     .ToArray();
+
+                var mandatoryCmds = template
+                    ?.Where(cmd => cmd.Commands.All(c => _invalidTemplateMethods.Contains(c.Method)))
+                    ?.Select(cmd => (cmd, commands: cmd.Commands.ToList()))
+                    ?.Where(p => p.commands.Any())
+                    ?.ToArray()
+                    ?.FirstOrDefault()
+                    .commands;
+
                 foreach (var (cmd, commands) in validCmds)
                 {
                     cmd.Commands = commands;
@@ -111,7 +133,7 @@ namespace Excavator
                     new CommandList
                     {
                         Time = 0,
-                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, excavatorIds, algorithmName),
+                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, excavatorIds, algorithmName, mandatoryCmds),
                     },
                 };
                 if (validCmds.Any())
