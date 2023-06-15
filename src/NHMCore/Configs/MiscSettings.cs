@@ -94,5 +94,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(AdvancedMode));
             }
         }
+        private bool _sendEvents = true;
+        public bool SendEvents
+        {
+            get => _sendEvents;
+            set
+            {
+                _sendEvents = value;
+                OnPropertyChanged(nameof(SendEvents));
+            }
+        }
     }
 }

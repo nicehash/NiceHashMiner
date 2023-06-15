@@ -90,6 +90,11 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.AdvancedMode;
             set => MiscSettings.Instance.AdvancedMode = value;
         }
+        public bool SendEvents
+        {
+            get => MiscSettings.Instance.SendEvents;
+            set => MiscSettings.Instance.SendEvents = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -412,6 +417,7 @@ namespace NHMCore.Configs.Data
             AutoUpdateNiceHashMiner2 = false;
             AutoUpdateMinerPlugins = true;
             AdvancedMode = false;
+            SendEvents = true;
         }
 
         public void SetValues(GeneralConfigOld configOld)
@@ -477,6 +483,7 @@ namespace NHMCore.Configs.Data
             AutoUpdateNiceHashMiner2 = configOld.AutoUpdateNiceHashMiner2;
             AutoUpdateMinerPlugins = configOld.AutoUpdateMinerPlugins;
             AdvancedMode = false;
+            SendEvents = true;
         }
 
         public void FixSettingBounds()

@@ -260,7 +260,7 @@ namespace NHMCore.Notifications
             Logger.Warn(TAG, $"Event occurred: {eventText}");
             EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
 #if NHMWS4
-            if (send)
+            if (send && MiscSettings.Instance.SendEvents)
             {
                 NHWebSocketV4.SendEvent(ev);
             }
