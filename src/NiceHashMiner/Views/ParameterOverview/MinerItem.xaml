@@ -159,8 +159,35 @@
                     </Style>
                 </Border.Style>
             </Border>
-            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
-                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch" >
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}"
+                          HorizontalContentAlignment="Stretch"
+                          Visibility="{Binding Name, Converter={StaticResource IsPluginExcavatorToVisibilityConverterNot}}">
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch"  >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Visibility="{Binding HasAnyContentSet, Converter={StaticResource NulBoolToVisibilityConverter}}" 
+                                   Style="{StaticResource GreenCircle}" 
+                                   FontSize="5"
+                                   Margin="5,0,5,0"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1">
+                        <TextBlock>
+                            You can fine-tune Excavator from the command file
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </ToggleButton>
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" 
+                          x:Name="AlgorithmsGridToggleButtonHidden" 
+                          Click="DropDownAlgorithms_Button_Click"  
+                          HorizontalContentAlignment="Stretch"
+                          Visibility="{Binding Name, Converter={StaticResource IsPluginExcavatorToVisibilityConverter}}">
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch"  >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="*" />
