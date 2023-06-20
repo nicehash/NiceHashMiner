@@ -84,7 +84,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.EnableSSLMining}"
                                         Label="Enable SSL Mining"
                                         Description="This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented."/>
-            
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.SendEvents}"
+                                        Label="Send events to rig manager"
+                                        Description="If enabled, NHM will send events to rig manager."/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

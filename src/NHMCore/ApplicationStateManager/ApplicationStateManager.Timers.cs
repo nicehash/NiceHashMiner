@@ -76,6 +76,7 @@ namespace NHMCore
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
                 var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
                 if (!hasMissingGPUs.isMissing) return;
+                EventManager.Instance.AddEventMissingDevice(true);
                 if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
@@ -97,7 +98,6 @@ namespace NHMCore
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs");
                     AvailableNotifications.CreateMissingGPUsInfo();
-                    EventManager.Instance.AddEvent(EventType.MissingDev, String.Join(',',hasMissingGPUs.uuids), null, false);
                 }
             },
             5 * 60 * 1000); // check every 5 minutes

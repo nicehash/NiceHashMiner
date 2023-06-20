@@ -126,10 +126,14 @@ namespace NHMCore.Mining.Grouping
                 {
                     // per algo benchmark scope
                     bool? benchmarkSuccess = null;
+                    string currentPlugin = string.Empty;
+                    string currentAlgo = string.Empty;
                     _stopCurrentAlgorithmBenchmark = CancellationTokenSource.CreateLinkedTokenSource(_stopBenchmark.Token);
                     try
                     {
                         var nextAlgo = benchAlgos.Dequeue();
+                        currentPlugin = nextAlgo.PluginName;
+                        currentAlgo = nextAlgo.AlgorithmName;
                         //EventManager.Instance.AddEvent(EventType.BenchmarkStarted, @$"{nextAlgo.PluginName}\{nextAlgo.AlgorithmName}", nextAlgo.ComputeDevice.B64Uuid, false); //causes only 1 device to benchmark
                         var benchmark = BenchmarkAlgorithm(nextAlgo, _stopCurrentAlgorithmBenchmark.Token);
                         var firstFinished = await Task.WhenAny(new Task<object>[] { commandTask, benchmark });
@@ -173,7 +177,11 @@ namespace NHMCore.Mining.Grouping
                     finally
                     {
                         _stopCurrentAlgorithmBenchmark.Dispose();
-                        if (!_stopCurrentAlgorithmBenchmark.IsCancellationRequested && benchmarkSuccess.HasValue && !benchmarkSuccess.Value) showFailed = true;
+                        if (!_stopCurrentAlgorithmBenchmark.IsCancellationRequested && benchmarkSuccess.HasValue && !benchmarkSuccess.Value)
+                        {
+                            showFailed = true;
+                            AvailableNotifications.CreateFailedBenchmarksInfo(Device, currentAlgo, currentPlugin);
+                        }
                     }
                 }
                 startMining = !_stopBenchmark.IsCancellationRequested;
@@ -183,7 +191,6 @@ namespace NHMCore.Mining.Grouping
                     var nextAlgo = benchAlgos.Dequeue();
                     nextAlgo.ClearBenchmarkPending();
                 }
-                if (showFailed) AvailableNotifications.CreateFailedBenchmarksInfo(Device);
             }
             catch (Exception ex)
             {
