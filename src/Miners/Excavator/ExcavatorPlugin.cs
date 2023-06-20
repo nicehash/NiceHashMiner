@@ -45,7 +45,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(19, 6);
+        public override Version Version => new Version(19, 7);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
@@ -94,22 +94,22 @@ namespace Excavator
                 .ToDictionary(p => p.gpu, p => p.algos);
         }
 
-        private void CreateExcavatorCommandTemplate(IEnumerable<int> uuids, string algorithmName)
-        {
-            try
-            {
-                var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
-                var template = CmdConfig.CreateTemplate(uuids, algorithmName);
-                if (!File.Exists(templatePath) && template != null)
-                {
-                    File.WriteAllText(templatePath, template);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("ExcavatorPlugin", $"CreateExcavatorCommandTemplate {e}");
-            }
-        }
+        //private void CreateExcavatorCommandTemplate(IEnumerable<int> uuids, string algorithmName, string filename)
+        //{
+        //    try
+        //    {
+        //        var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID, filename);
+        //        var template = CmdConfig.CreateTemplate(uuids, algorithmName);
+        //        if (!File.Exists(templatePath) && template != null)
+        //        {
+        //            File.WriteAllText(templatePath, template);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Error("ExcavatorPlugin", $"CreateExcavatorCommandTemplate {e}");
+        //    }
+        //}
 
         protected override MinerBase CreateMinerBase()
         {
@@ -143,6 +143,7 @@ namespace Excavator
                 foreach (var file in dirInfo.GetFiles())
                 {
                     try {
+                        if (file.Name.Contains("cmd_")) continue;
                         if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete();
                     }
                     catch (Exception e)
