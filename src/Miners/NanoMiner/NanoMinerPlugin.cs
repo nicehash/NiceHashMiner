@@ -43,7 +43,7 @@ namespace NanoMiner
         public override string Name => "NanoMiner";
 
 
-        public override Version Version => new Version(19, 5);
+        public override Version Version => new Version(19, 6);
 
         public override string Author => "info@nicehash.com";
 
@@ -77,7 +77,7 @@ namespace NanoMiner
                 .Select(gpu => (gpu, algorithms: GetSupportedAlgorithmsForDevice(gpu)))
                 .Where(p => p.algorithms.Any())
                 .ToDictionary(p => p.gpu, p => p.algorithms);
-            
+
             foreach (var cpu in cpus)
             {
                 supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));

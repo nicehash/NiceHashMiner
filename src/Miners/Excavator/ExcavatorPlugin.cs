@@ -45,7 +45,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(19, 7);
+        public override Version Version => new Version(19, 8);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";

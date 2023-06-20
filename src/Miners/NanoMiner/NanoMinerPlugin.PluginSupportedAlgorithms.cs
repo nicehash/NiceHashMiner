@@ -16,7 +16,7 @@ namespace NanoMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30, Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit =  (4UL << 30) , Enabled = false },
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false},
                         new SAS(AlgorithmType.Autolykos) { Enabled = false},
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false }
@@ -26,7 +26,7 @@ namespace NanoMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28), Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit =  (4UL << 30) , Enabled = false },
                         new SAS(AlgorithmType.Octopus) { Enabled = false, NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false},
                         new SAS(AlgorithmType.Autolykos) { Enabled = false},
