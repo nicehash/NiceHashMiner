@@ -19,7 +19,7 @@ namespace Excavator
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.EtcHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.KAWPOW) { Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false, NonDefaultRAMLimit = (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt),
                         new SAS(AlgorithmType.KHeavyHash)
                     }
@@ -31,7 +31,7 @@ namespace Excavator
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.EtcHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.KAWPOW) { Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false, NonDefaultRAMLimit =  (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt),
                         new SAS(AlgorithmType.KHeavyHash)
                     }
