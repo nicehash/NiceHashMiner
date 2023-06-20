@@ -25,7 +25,7 @@
             <!--#region Dynamic Theme Properties-->
             <DrawingBrush x:Key="NHMLogo" Drawing="{DynamicResource NHMLogoLight}" />
             <DrawingBrush x:Key="NHMBigLogo" Drawing="{DynamicResource NHMLogoBigLight}" />
-            
+
             <DrawingBrush x:Key="QrLightLogo" Drawing="{DynamicResource QrIconDefault}" />
             <DrawingBrush x:Key="QrDarkLogo" Drawing="{DynamicResource QRIcon}" />
 
@@ -81,7 +81,7 @@
             <!--#endregion base sytles-->
 
             <!--#region common buttons-->
-            
+
             <!--Start Stop buttons-->
             <Style TargetType="{x:Type Button}" x:Key="StartStopButton">
                 <Setter Property="MaxHeight" Value="24"/>
@@ -201,6 +201,8 @@
             <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
             <converters:BooleanDaysToStringConverter x:Key="BooleanDaysToStringConverter" />
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            <converters:IsPluginExcavatorToVisibilityConverter x:Key="IsPluginExcavatorToVisibilityConverter" />
+            <converters:IsPluginExcavatorToVisibilityConverterNot x:Key="IsPluginExcavatorToVisibilityConverterNot" />
 
         </ResourceDictionary>
     </Application.Resources>
