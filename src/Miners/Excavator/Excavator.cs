@@ -31,6 +31,7 @@ namespace Excavator
         private HttpClient _httpClient;
         private string _authToken = Guid.NewGuid().ToString();
         new protected int _apiPort;
+        private readonly int SpeedAnomalySeconds = 50;
 
         private ApiData LastApiData
         {
@@ -184,16 +185,26 @@ namespace Excavator
 
         private static bool IsSpeedOk(ApiData ad)
         {
-            const double PER_GPU_ANOMALY = 200 * 1000 * 1000; // 200MH/s
-            const double SUM_GPU_ANOMALY = 2 * 1000 * 1000 * 1000; // 2GH/s
+            const double PER_GPU_ANOMALY = 200000000 * 2; // 400MH/s
+            const double SUM_GPU_ANOMALY = 2000000000d * 2; // 4GH/s
+            const double PER_GPU_ANOMALY_LARGE = PER_GPU_ANOMALY * 10 * 2;
+            const double SUM_GPU_ANOMALY_LARGE = SUM_GPU_ANOMALY * 10 * 2;
             if (ad == null) return false; // no speeds
             if (ad.AlgorithmSpeedsPerDevice == null) return false; // no speeds
-            var speedsPerDevice = ad.AlgorithmSpeedsPerDevice.Values.Select(speeds => speeds.Select(pair => pair.speed).FirstOrDefault()).ToArray();
-            var isPerGPUAnomaly = speedsPerDevice.Any(deviceSpeed => deviceSpeed >= PER_GPU_ANOMALY);
-            var isPerGPUZeroSpeed = speedsPerDevice.Any(deviceSpeed => Math.Abs(deviceSpeed) < Double.Epsilon);
-            var isSumGPUAnomaly = speedsPerDevice.Sum() >= SUM_GPU_ANOMALY;
-            if (isPerGPUAnomaly || isPerGPUZeroSpeed || isSumGPUAnomaly) return false; // speeds anomally
+            //var speedsPerDevice = ad.AlgorithmSpeedsPerDevice.Values.Select(speeds => speeds.Select(pair => pair.speed).FirstOrDefault()).ToArray();
+            var speedsPerDevice = ad.AlgorithmSpeedsPerDevice.Values.SelectMany(i => i).ToArray();
 
+            //var isPerGPUAnomaly = speedsPerDevice.Any(deviceSpeed => deviceSpeed >= PER_GPU_ANOMALY);
+            var isPerGPUAnomaly = speedsPerDevice.Any(deviceSpeed => deviceSpeed.type == AlgorithmType.KHeavyHash ? deviceSpeed.speed >= PER_GPU_ANOMALY_LARGE : deviceSpeed.speed >= PER_GPU_ANOMALY);
+            //var isPerGPUZeroSpeed = speedsPerDevice.Any(deviceSpeed => Math.Abs(deviceSpeed) < Double.Epsilon);
+            var isPerGPUZeroSpeed = speedsPerDevice.Any(deviceSpeed => Math.Abs(deviceSpeed.speed) < Double.Epsilon);
+            //var isSumGPUAnomaly = speedsPerDevice.Sum() >= SUM_GPU_ANOMALY;
+            var sumGPUAnomalyNormal = speedsPerDevice.Where(s => s.type != AlgorithmType.KHeavyHash)?.Select(s => s.speed)?.Sum();
+            var sumGPUAnomalyLarge = speedsPerDevice.Where(s => s.type == AlgorithmType.KHeavyHash)?.Select(s => s.speed)?.Sum();
+            if (sumGPUAnomalyNormal is double sn && sn >= SUM_GPU_ANOMALY) return false;
+            if (sumGPUAnomalyLarge is double sl && sl >= SUM_GPU_ANOMALY_LARGE) return false;
+            //if (isPerGPUAnomaly || isPerGPUZeroSpeed || isSumGPUAnomaly) return false; // speeds anomally
+            if (isPerGPUAnomaly || isPerGPUZeroSpeed) return false; // speeds anomally
             return true;
         }
 
@@ -216,7 +227,7 @@ namespace Excavator
                 while (isActive())
                 {
                     var elapsed = DateTime.UtcNow - lastSuccessfulSpeeds;
-                    if (elapsed >= TimeSpan.FromSeconds(50))
+                    if (elapsed >= TimeSpan.FromSeconds(SpeedAnomalySeconds))
                     {
                         Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"Restaring excavator due to speed anomaly");
                         //_ = await ExecuteCommand(@"{""id"":1,""method"":""quit"",""params"":[]}");
