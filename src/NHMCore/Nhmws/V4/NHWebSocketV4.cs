@@ -363,14 +363,15 @@ namespace NHMCore.Nhmws.V4
         {
             if (first == null || second == null) return second;
             var devState = new MinerState.DeviceState();
-            if (!AreEqual(first.OptionalDynamicValues, second.OptionalDynamicValues))
-            {
-                devState.OptionalDynamicValues = second.OptionalDynamicValues;
-            }
+            //if (!AreEqual(first.OptionalDynamicValues, second.OptionalDynamicValues))
+            //{
+            //    devState.OptionalDynamicValues = second.OptionalDynamicValues;
+            //}
             //if (!AreEqual(first.MandatoryDynamicValues, second.MandatoryDynamicValues))
             //{
             //    devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
             //}
+            devState.OptionalDynamicValues = second.OptionalDynamicValues;
             devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
             if (!AreEqual(first.OptionalMutableValues, second.OptionalMutableValues))
             {
