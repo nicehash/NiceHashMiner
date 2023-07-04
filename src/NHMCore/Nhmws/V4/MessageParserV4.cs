@@ -776,7 +776,8 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
+                        if(lims.max - lims.min <= 5) limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (300, 3000) });
+                        else limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
             }

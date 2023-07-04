@@ -52,24 +52,29 @@ namespace Excavator
             return path;
         }
 
-        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string algorithmName, List<Command> mandatoryCMDS = null)
+        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> excavatorIds, string algorithmName)
         {
             var initialCommands = new List<Command>
                 {
                     new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
                     new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ algorithmName.ToLower() } },
                 };
+            return initialCommands;
+        }
+        private static List<Command> CreateExtraCommands(IEnumerable<int> excavatorIds, string algorithmName, List<Command> mandatoryCMDS = null)
+        {
+            var initialCommands = new List<Command>();
             if (algorithmName == "randomx")
             {
-                initialCommands.AddRange(excavatorIds.Select((dev, index) =>  new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=1", "USEMSR=1" } }));
-                if(mandatoryCMDS != null)
+                initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=1", "USEMSR=1" } }));
+                if (mandatoryCMDS != null)
                 {
                     foreach (var c in initialCommands)
                     {
                         var crossRef = mandatoryCMDS.FirstOrDefault(m => m.Id == c.Id);
                         if (crossRef == null) continue;
                         c.Params = crossRef.Params;
-                    }   
+                    }
                 }
 
             }
@@ -90,6 +95,11 @@ namespace Excavator
                     },
                     new CommandList
                     {
+                        Time = 1,
+                        Commands = CreateExtraCommands(excavatorIds, algorithmName),
+                    },
+                    new CommandList
+                    {
                         Event = "on_quit",
                         Commands = new List<Command>{ },
                     }
@@ -102,7 +112,7 @@ namespace Excavator
                 return null;
             }
         }
-        private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add", "worker.add" };
+        private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add" };
         private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<int> excavatorIds, string subscribeLocation, string subscribeUsername, string algorithmName)
         {
            
@@ -116,24 +126,32 @@ namespace Excavator
                     .Where(p => p.commands.Any())
                     .ToArray();
 
-                var mandatoryCmds = template
-                    ?.Where(cmd => cmd.Commands.All(c => _invalidTemplateMethods.Contains(c.Method)))
-                    ?.Select(cmd => (cmd, commands: cmd.Commands.ToList()))
-                    ?.Where(p => p.commands.Any())
-                    ?.ToArray()
-                    ?.FirstOrDefault()
-                    .commands;
+                var otherCmds = template
+                    .Where(cmd => cmd.Commands.All(c => _invalidTemplateMethods.Contains(c.Method)))
+                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
+                    .Where(p => p.commands.Any())
+                    .ToArray();
 
                 foreach (var (cmd, commands) in validCmds)
                 {
                     cmd.Commands = commands;
+                    foreach(var c in cmd.Commands)
+                    {
+                        if(c.Method == "worker.add")
+                        {
+                            if (c.Params.Count >= 2 && c.Params[0].ToLower() != "randomx")
+                            {
+                                c.Params = new List<string> { algorithmName.ToLower(), c.Params[1] };
+                            }
+                        }
+                    }
                 }
                 var commandListTemplate = new List<CommandList>
                 {
                     new CommandList
                     {
                         Time = 0,
-                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, excavatorIds, algorithmName, mandatoryCmds),
+                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, excavatorIds, algorithmName),
                     },
                 };
                 if (validCmds.Any())
