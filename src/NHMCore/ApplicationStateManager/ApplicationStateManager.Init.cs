@@ -242,20 +242,20 @@ namespace NHMCore
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
                 if (btc != NHMRegistry.Get_QM_MiningaddressFromRegistry() && Helpers.IsElevated && CredentialValidators.ValidateBitcoinAddress(btc)) NHMRegistry.Set_QM_MiningaddressFromRegistry(btc);
-                if (AvailableDevices.HasGpuToPause)
-                {
-                    var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
-                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(deviceToPauseUuid);
-                }
-                else if (MiningSettings.Instance.DeviceToPauseUuid != "")
-                {
-                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
-                    AvailableDevices.GPUs.FirstOrDefault(dev => dev.Uuid == MiningSettings.Instance.DeviceToPauseUuid).PauseMiningWhenGamingMode = true;
-                }
+                //if (AvailableDevices.HasGpuToPause)
+                //{
+                //    var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
+                //    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(deviceToPauseUuid);
+                //}
+                //else if (MiningSettings.Instance.DeviceToPauseUuid != "")
+                //{
+                //    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
+                //    AvailableDevices.GPUs.FirstOrDefault(dev => dev.Uuid == MiningSettings.Instance.DeviceToPauseUuid).PauseMiningWhenGamingMode = true;
+                //}
                 else if (AvailableDevices.HasGpu)
                 {
                     MiningSettings.Instance.DeviceIndex = 0;
-                    AvailableDevices.GPUs.FirstOrDefault().PauseMiningWhenGamingMode = true;
+                    //AvailableDevices.GPUs.FirstOrDefault().PauseMiningWhenGamingMode = true;
                 }
                 GPUProfileManager.Instance.Init();
                 if (GPUProfileManager.Instance.SystemContainsSupportedDevicesNotSystemElevated)
@@ -280,7 +280,7 @@ namespace NHMCore
             }
             catch (Exception e)
             {
-                Logger.Error("ApplicationStateManager.Init", $"Exception: {e.Message}");
+                Logger.Error("ApplicationStateManager.Init", $"Exception: {e.Message} \n TRACE:{e.StackTrace}");
             }
             finally
             {
