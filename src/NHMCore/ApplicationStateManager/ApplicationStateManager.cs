@@ -202,7 +202,7 @@ namespace NHMCore
                 rigState = RigStatus.Stopped;
             }
 #if NHMWS4
-            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
+            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Testing);
 #else
             var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining);
 #endif
@@ -236,7 +236,7 @@ namespace NHMCore
                 RigStatus.Error => "ERROR",
                 RigStatus.Pending => "PENDING",
                 RigStatus.Disabled => "DISABLED",
-                RigStatus.Gaming => "GAMING",
+                //RigStatus.Gaming => "GAMING",
                 RigStatus.Testing => "TESTING",
                 _ => "UNKNOWN",
             };

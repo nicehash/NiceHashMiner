@@ -125,7 +125,7 @@ namespace NHMCore.ApplicationState
             // DeviceState Counts
             StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
 #if NHMWS4
-            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
+            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Testing);
 #else
             MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
 #endif
@@ -138,7 +138,7 @@ namespace NHMCore.ApplicationState
             AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
 #if NHMWS4
-            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
+            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing);
 #else
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
 #endif

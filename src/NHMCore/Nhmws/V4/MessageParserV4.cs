@@ -581,7 +581,7 @@ namespace NHMCore.Nhmws.V4
                     DeviceState.Pending => 0, // NOT DEFINED
                     DeviceState.Disabled => 4, // DISABLED
 #if NHMWS4
-                    DeviceState.Gaming => 6, //GAMING
+                    //DeviceState.Gaming => 6, //GAMING
                     DeviceState.Testing => 7, //TESTING
 #endif
                     _ => 0, // UNKNOWN

@@ -19,7 +19,7 @@ namespace NHMCore.Mining
         public static bool HasAmd => Devices.Any(d => d.DeviceType == DeviceType.AMD);
         public static bool HasCpu => Devices.Any(d => d.DeviceType == DeviceType.CPU);
         public static bool HasGpu => HasNvidia || HasAmd;
-        public static bool HasGpuToPause => Devices.Any(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU);
+        //public static bool HasGpuToPause => Devices.Any(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU);
         public static int AvailCpus => GetCountForType(DeviceType.CPU);
         public static int AvailNVGpus => GetCountForType(DeviceType.NVIDIA);
         public static int AvailAmdGpus => GetCountForType(DeviceType.AMD);

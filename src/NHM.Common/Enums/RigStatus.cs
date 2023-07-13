@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace NHM.Common.Enums
 {
     public enum RigStatus
@@ -10,6 +11,7 @@ namespace NHM.Common.Enums
         Error,
         Pending,
         Disabled,
+        [Obsolete("UNUSED status", true)]
         Gaming,
 #if NHMWS4
         Testing,

@@ -256,18 +256,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateGamingStarted()
-        {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingStarted, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining. Mining will resume after the game is closed."));
-            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.GamingStarted);
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-        public static void CreateGamingFinished()
-        {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
-            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.GamingFinished);
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
         public static void CreateOutdatedDriverWarningForPlugin(string pluginName, string pluginUUID, List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion) driverCheckReturn)> listOfOldDrivers)
         {
             string name = Tr("Detected older driver versions") + " (" + pluginName + ")";

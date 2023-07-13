@@ -239,7 +239,7 @@ namespace NHMCore.Mining
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
 
-            _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
+            //_isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
             _deviceToPauseUuid = MiningSettings.Instance.DeviceToPauseUuid;
             _useScheduler = MiningSettings.Instance.UseScheduler;
             MiningSettings.Instance.PropertyChanged += MiningSettingsInstance_PropertyChanged;
@@ -279,7 +279,7 @@ namespace NHMCore.Mining
         {
             _ = e.PropertyName switch
             {
-                nameof(MiningSettings.PauseMiningWhenGamingMode) => PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode),
+                //nameof(MiningSettings.PauseMiningWhenGamingMode) => PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode),
                 nameof(MiningSettings.DeviceToPauseUuid) => SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid),
                 nameof(MiningSettings.EnableSSLMining) => SSLMiningChanged(),
                 nameof(MiningSettings.UseScheduler) => UseSchedulerSettingsChanged(MiningSettings.Instance.UseScheduler),
@@ -634,15 +634,15 @@ namespace NHMCore.Mining
                 var newSelectedDev = AvailableDevices.GetDeviceWithUuid(_deviceToPauseUuid);
                 if (newSelectedDev != null)
                 {
-                    newSelectedDev.PauseMiningWhenGamingMode = true;
+                    //newSelectedDev.PauseMiningWhenGamingMode = true;
                     ConfigManager.DeviceConfigFileCommit(newSelectedDev);
                 }
 
                 // set previous selected gpu to false
-                var oldSelectedDev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.PauseMiningWhenGamingMode);
+                var oldSelectedDev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid);
                 if (oldSelectedDev != null)
                 {
-                    oldSelectedDev.PauseMiningWhenGamingMode = false;
+                    //oldSelectedDev.PauseMiningWhenGamingMode = false;
                     ConfigManager.DeviceConfigFileCommit(oldSelectedDev);
                 }
             }
@@ -687,25 +687,25 @@ namespace NHMCore.Mining
                 await StopAllMinersTask();
                 ApplicationStateManager.StopMining();
             }
-            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled && _deviceToPauseUuid != null)
-            {
-                AvailableNotifications.CreateGamingStarted();
-                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
-                dev.IsGaming = true;
-#if NHMWS4
-                dev.State = DeviceState.Gaming;
-#endif
-                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
-                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
-            }
-            else if (!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
-            {
-                AvailableNotifications.CreateGamingFinished();
-                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
-                dev.IsGaming = false;
-                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
-                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
-            }
+//            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled && _deviceToPauseUuid != null)
+//            {
+//                AvailableNotifications.CreateGamingStarted();
+//                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+//                dev.IsGaming = true;
+//#if NHMWS4
+//                dev.State = DeviceState.Gaming;
+//#endif
+//                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+//                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
+//            }
+            //else if (!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
+            //{
+            //    AvailableNotifications.CreateGamingFinished();
+            //    var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+            //    dev.IsGaming = false;
+            //    bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+            //    await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
+            //}
             else if (command is TriggerSwitchCheckCommand triggerSwitchCheckCommand)
             {
                 Logger.Info(Tag, "Switch triggered manually");

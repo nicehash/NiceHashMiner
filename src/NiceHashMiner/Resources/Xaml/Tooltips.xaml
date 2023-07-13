@@ -43,7 +43,6 @@
     <system:String x:Key="minerRestartDelay">Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.</system:String>
     <system:String x:Key="apiBindStart">Set starting port number from which miner API Bind ports will be set for communication.</system:String>
     <system:String x:Key="apiQueryInterval">API query interval for ccminer, sgminer cpuminer and ethminer.</system:String>
-    <system:String x:Key="steamGamingMode">NiceHash Miner will detect when the game is started and will pause mining. Once the game is closed, mining will resume.</system:String>
 
     <system:String x:Key="scanQrCode">Use NiceHash Mobile app and scan this QR code to add this rig to your Rig Manager automatically.</system:String>
     
