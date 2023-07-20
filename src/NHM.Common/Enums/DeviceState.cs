@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace NHM.Common.Enums
 {
     public enum DeviceState
@@ -10,6 +11,7 @@ namespace NHM.Common.Enums
         Pending,
         Disabled,
 #if NHMWS4
+        [Obsolete("UNUSED status", true)]
         Gaming,
         Testing
 #endif

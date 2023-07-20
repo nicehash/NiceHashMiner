@@ -44,7 +44,9 @@ namespace NHMCore.Notifications
         WrongChecksumDll,
         MinerRestart,
         NullChecksum,
+        [Obsolete]
         GamingStarted,
+        [Obsolete]
         GamingFinished,
         AdminRunRequired,
         MotherboardNotCompatible,

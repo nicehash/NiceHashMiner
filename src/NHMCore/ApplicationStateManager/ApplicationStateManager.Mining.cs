@@ -2,6 +2,7 @@ using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
@@ -66,6 +67,7 @@ namespace NHMCore
             var failReason = "";
             var allAlgorithmsDisabled = !device.AnyAlgorithmEnabled();
             var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) isAllZeroPayingState = false;
             // check if device has any benchmakrs
             var needBenchmarkOrRebench = device.AnyEnabledAlgorithmsNeedBenchmarking();
             if (allAlgorithmsDisabled)
@@ -73,12 +75,14 @@ namespace NHMCore
                 device.State = DeviceState.Error;
                 started = false;
                 failReason = "Cannot start a device with all disabled algoirhtms";
+                Logger.Error("ApplicationStateManager", $"{device.Name} is in error state due to all algos being disabled");
             }
             else if (isAllZeroPayingState && !needBenchmarkOrRebench)
             {
                 device.State = DeviceState.Error;
                 started = false;
                 failReason = "No enabled algorithm is profitable";
+                Logger.Error("ApplicationStateManager", $"{device.Name} is in error state due to isAllZeroPayingState && !needBenchmarkOrRebench");
             }
             else
             {

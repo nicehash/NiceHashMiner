@@ -21,7 +21,8 @@ namespace Excavator
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.KAWPOW) { Enabled = false, NonDefaultRAMLimit = (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt),
-                        new SAS(AlgorithmType.KHeavyHash)
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.IronFish)
                     }
                 },
                 {
@@ -33,7 +34,8 @@ namespace Excavator
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.KAWPOW) { Enabled = false, NonDefaultRAMLimit =  (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt),
-                        new SAS(AlgorithmType.KHeavyHash)
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.IronFish)
                     }
                 },
                 {
@@ -53,6 +55,7 @@ namespace Excavator
                 { AlgorithmType.NeoScrypt, "neoscrypt" },
                 { AlgorithmType.RandomXmonero, "randomx" },
                 { AlgorithmType.KHeavyHash, "kheavyhash" },
+                { AlgorithmType.IronFish, "ironfish" }
             }
         };
     }

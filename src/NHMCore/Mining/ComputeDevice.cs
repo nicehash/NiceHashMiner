@@ -76,17 +76,6 @@ namespace NHMCore.Mining
             }
         }
 
-        private bool _pauseMiningWhenGamingMode = false;
-        public bool PauseMiningWhenGamingMode
-        {
-            get => _pauseMiningWhenGamingMode;
-            internal set
-            {
-                if (value == _pauseMiningWhenGamingMode) return;
-                _pauseMiningWhenGamingMode = value;
-                OnPropertyChanged();
-            }
-        }
         public List<DeviceDynamicProperties> SupportedDynamicProperties { get; set; } = new();
 
         // disabled state check
@@ -678,7 +667,7 @@ namespace NHMCore.Mining
             //Enabled = config.Enabled;
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
-            PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
+            //PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
            
             var tdpSimpleDefault = TDPSimpleType.HIGH;
             var tdpSettings = config.TDPSettings;
@@ -760,7 +749,7 @@ namespace NHMCore.Mining
                 Enabled = Enabled,
                 MinimumProfit = MinimumProfit,
                 TDPSettings = TDPSettings,
-                PauseMiningWhenGamingMode = PauseMiningWhenGamingMode
+                //PauseMiningWhenGamingMode = PauseMiningWhenGamingMode
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)

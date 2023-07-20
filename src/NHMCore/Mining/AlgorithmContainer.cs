@@ -329,7 +329,11 @@ namespace NHMCore.Mining
                     return 1000;
                 }
 
-                if (!_updateEstimatedProfitCalled) return -2;
+                if (!_updateEstimatedProfitCalled)
+                {
+                    Logger.Error("AlgoContainer", "UpdateEstimatedProfit not called, returning -2");
+                    return -2;
+                }
 
                 if (EstimatedProfitAllSMAPresent && EstimatedProfitAllSMAPositiveOrZero)
                 {
@@ -342,6 +346,7 @@ namespace NHMCore.Mining
                     return Math.Round(newProfit, 8);
                 }
                 // we can't calculate 
+                Logger.Error("AlgoContainer", "Cant calculate, returning -1");
                 return -1;
             }
         }

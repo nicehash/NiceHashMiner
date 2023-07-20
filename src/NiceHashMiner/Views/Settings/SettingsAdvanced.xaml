@@ -66,18 +66,6 @@
                                         Enabled="{Binding GlobalDeviceSettings.RestartMachineOnLostGPU}"
                                         Label="Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)"
                                         Description="{StaticResource runOnGPUsLost}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.PauseMiningWhenGamingMode}"
-                                        Label="Pause mining when Steam game is started"
-                                        Description="{StaticResource steamGamingMode}"/>
-            <ComboBox x:Name="cBoxGPUs" Style="{StaticResource smallComboBoxSteam}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding MiningSettings.GPUs}" SelectedIndex="{Binding MiningSettings.DeviceIndex, Mode=TwoWay}" Margin="0,0,24,0" SelectionChanged="GPUComboBox_SelectionChanged" HorizontalAlignment="Left">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding FullName}" Width="300" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
                                         Label="Resolve NiceHash domains to IPs via Cloudflare"
                                         Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>

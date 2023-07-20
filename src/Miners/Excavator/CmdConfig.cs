@@ -178,14 +178,14 @@ namespace Excavator
             return template;
         }
         private static string GetServiceLocation(string miningLocation)
-        {
+        { 
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-test.auto.nicehash.com:443";
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"nhmp-dev.auto.nicehash.com:443";
             //BuildTag.PRODUCTION
             return $"nhmp.auto.nicehash.com:443";
         }
 
-        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, string fileName, string binPath, params int[] excavatorIds) { 
+        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, string fileName, string binPath, params int[] excavatorIds) {
             var miningLocation = GetMiningLocation(_miningLocation);
             var templatePath = CommandFileTemplatePath(pluginUUID, binPath, fileName);
             var miningServiceLocation = GetServiceLocation(miningLocation);

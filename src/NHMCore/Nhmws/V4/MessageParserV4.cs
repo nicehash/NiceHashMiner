@@ -27,6 +27,7 @@ namespace NHMCore.Nhmws.V4
     static class MessageParserV4
     {
         private static readonly string _TAG = "MessageParserV4";
+        private static Dictionary<string, List<DeviceDynamicProperties>> IgnoredValues = new();
         internal static IMethod ParseMessage(string jsonData)
         {
             var method = MessageParser.ParseMessageData(jsonData);
@@ -96,6 +97,7 @@ namespace NHMCore.Nhmws.V4
 
         private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin = false)
         {
+            if(!IgnoredValues.ContainsKey(d.B64Uuid)) IgnoredValues.Add(d.B64Uuid, new List<DeviceDynamicProperties> { });
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
                 (nameof(ILoad), ILoad g) => $"{(int)g.Load}",
@@ -166,20 +168,58 @@ namespace NHMCore.Nhmws.V4
                 .Select(p => p.Value)
                 .ToList();
 
-            bool shouldRemoveDynamicVal((DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
+            if (isLogin)
             {
-                if (dynamicVal.unit == String.Empty) return false;
-                var ok = Int32.TryParse(dynamicVal.value, out var res);
-                if (ok && res < 0 && (!dynamicVal.name.Contains("clock") || (!dynamicVal.name.Contains("voltage")))) return true;
+                foreach (var od in deviceOptionalDynamic)
+                {
+                    if ((od.type == DeviceDynamicProperties.Temperature ||
+                        od.type == DeviceDynamicProperties.HotspotTemp ||
+                        od.type == DeviceDynamicProperties.VramTemp ||
+                        od.type == DeviceDynamicProperties.CoreClock ||
+                        od.type == DeviceDynamicProperties.MemClock ||
+                        od.type == DeviceDynamicProperties.PowerUsage ||
+                        od.type == DeviceDynamicProperties.TDP ||
+                        od.type == DeviceDynamicProperties.TDPWatts ||
+                        od.type == DeviceDynamicProperties.CoreVoltage) &&
+                        Int32.TryParse(od.value, out var lessOrEqual) && lessOrEqual <= 0)
+                    {
+                        if (IgnoredValues.TryGetValue(d.B64Uuid, out var list) &&
+                            !list.Contains(od.type))
+                        {
+                            list.Add(od.type);
+                        }
+                    }
+                    if ((od.type == DeviceDynamicProperties.Load ||
+                        od.type == DeviceDynamicProperties.FanSpeedRPM ||
+                        od.type == DeviceDynamicProperties.FanSpeedPercentage) &&
+                        Int32.TryParse(od.value, out var less) && less < 0)
+                    {
+                        if (IgnoredValues.TryGetValue(d.B64Uuid, out var list) &&
+                            !list.Contains(od.type))
+                        {
+                            list.Add(od.type);
+                        }
+                    }
+                }
+            }
+
+            bool shouldRemoveDynamicVal(string b64uuid, (DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
+            {
+                //if (dynamicVal.unit == String.Empty) return false;
+                if (dynamicVal.type == DeviceDynamicProperties.NONE) return false;
+                if(IgnoredValues.TryGetValue(d.B64Uuid, out var list) && list.Contains(dynamicVal.type))
+                {
+                    return true;
+                }
                 return false;
             };
-            deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
+            deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(d.B64Uuid, dynamVal));
             //deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
-            if (isLogin) deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
-            foreach (DeviceDynamicProperties i in Enum.GetValues(typeof(DeviceDynamicProperties)))
-            {
-                if (!d.SupportedDynamicProperties.Contains(i)) deviceOptionalDynamic.RemoveAll(prop => prop.type == i);
-            }
+            //if (isLogin) deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
+            //foreach (DeviceDynamicProperties i in Enum.GetValues(typeof(DeviceDynamicProperties)))
+            //{
+            //    if (!d.SupportedDynamicProperties.Contains(i)) deviceOptionalDynamic.RemoveAll(prop => prop.type == i);
+            //}
             List<(string name, string? unit)> optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
@@ -581,7 +621,7 @@ namespace NHMCore.Nhmws.V4
                     DeviceState.Pending => 0, // NOT DEFINED
                     DeviceState.Disabled => 4, // DISABLED
 #if NHMWS4
-                    DeviceState.Gaming => 6, //GAMING
+                    //DeviceState.Gaming => 6, //GAMING
                     DeviceState.Testing => 7, //TESTING
 #endif
                     _ => 0, // UNKNOWN
@@ -776,7 +816,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
                     {
-                        if(lims.max - lims.min <= 5) limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (300, 3000) });
+                        if(lims.max - lims.min <= 20) limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (300, 3000) });//INTERFACE ERROR, limits could not be retrieved
                         else limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
@@ -796,7 +836,8 @@ namespace NHMCore.Nhmws.V4
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
+                        if(lims.min - lims.min <= 20) limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = lims.def, Range = (300, 10000) });//INTERFACE ERROR, limits could not be retrieved
+                        else limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
             }
