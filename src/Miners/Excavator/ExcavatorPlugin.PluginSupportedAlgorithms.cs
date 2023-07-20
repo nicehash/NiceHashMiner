@@ -55,6 +55,7 @@ namespace Excavator
                 { AlgorithmType.NeoScrypt, "neoscrypt" },
                 { AlgorithmType.RandomXmonero, "randomx" },
                 { AlgorithmType.KHeavyHash, "kheavyhash" },
+                { AlgorithmType.IronFish, "ironfish" }
             }
         };
     }

@@ -135,7 +135,7 @@ namespace NHMCore.Notifications
         public void AddEventMissingFiles(bool send = true)
         {
             var type = EventType.MissingFiles;
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow() };
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = "" };
             AddEvent(type, ev, send);
         }
         public void AddEventVirtualMemInsufficient(bool send = true)

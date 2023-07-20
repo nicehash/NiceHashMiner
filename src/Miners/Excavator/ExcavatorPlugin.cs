@@ -28,7 +28,7 @@ namespace Excavator
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v1.8.6.0",
-                ExePath = new List<string> { "NHQM_v0.6.6.0", "excavator.exe" },
+                ExePath = new List<string> { "NHQM_v0.6.6.0_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.6.0_RC/NHQM_v0.6.6.0_RC.zip"
