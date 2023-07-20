@@ -2,6 +2,7 @@ using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
@@ -66,6 +67,7 @@ namespace NHMCore
             var failReason = "";
             var allAlgorithmsDisabled = !device.AnyAlgorithmEnabled();
             var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) isAllZeroPayingState = false;
             // check if device has any benchmakrs
             var needBenchmarkOrRebench = device.AnyEnabledAlgorithmsNeedBenchmarking();
             if (allAlgorithmsDisabled)
