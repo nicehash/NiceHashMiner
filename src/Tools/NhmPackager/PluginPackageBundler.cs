@@ -152,7 +152,7 @@ namespace NhmPackager
                     var cachedPluginsUpdatedPath = GetCachedPluginsPath($"{name}.txt");
                     using var client = new HttpClient();
                     using var s = await client.GetStreamAsync(url);
-                    using var fs = new FileStream(cachedPluginsPath, FileMode.CreateNew);
+                    using var fs = new FileStream(cachedPluginsPath, FileMode.Create);
                     await s.CopyToAsync(fs);
                     File.WriteAllText(cachedPluginsUpdatedPath, lastUpdated);
                     return true;

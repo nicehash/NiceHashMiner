@@ -140,6 +140,8 @@ namespace NHM.Common.Enums
         KHeavyHash = 62,
         //[Obsolete("UNUSED Algorithm")]
         NexaPow = 63,
+        //[Obsolete("UNUSED Algorithm")]
+        IronFish = 64
         #endregion // NiceHashAPI
     }
 

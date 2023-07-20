@@ -365,7 +365,11 @@ namespace NHMCore.Mining
                 foreach (var stopBenchmark in nonBenchmarkingCommands) await StopAndRemoveBenchmark(stopBenchmark);
                 // set the stop and error states
                 foreach (var stop in stopCommands) stop.Device.State = DeviceState.Stopped; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
-                foreach (var stop in startErrorCommands) stop.Device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var stop in startErrorCommands)
+                {
+                    Logger.Error("MiningManager", $"{stop.Device.Name} is in error state due to !t.anyAlgoToBenchmark && !t.anyAlgoToMine");
+                    stop.Device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                }
 
                 // start and group devices for mining
                 var devicesToMineChange = startMiningCommands
