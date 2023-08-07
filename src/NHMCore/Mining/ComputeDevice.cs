@@ -536,6 +536,19 @@ namespace NHMCore.Mining
             if(DeviceMonitor is IMemoryClockSetDelta set) return set.ResetMemoryClockDelta();
             return false;
         }
+        public void ResetEverything()
+        {
+            if (MiscSettings.Instance.AutoResetOC)
+            {
+                ResetCoreClock();
+                ResetCoreClockDelta();
+                ResetMemoryClock();
+                ResetMemoryClockDelta();
+                ResetCoreVoltage();
+                SetPowerModeManual(TDPLimits.def);
+            }
+            ResetFanSpeed();
+        }
 
         #endregion
 

@@ -75,6 +75,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.SendEvents}"
                                         Label="Send events to rig manager"
                                         Description="If enabled, NHM will send events to rig manager."/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.AutoResetOC}"
+                                        Label="Automatic OC reset (leave this on if you dont know what it is)"
+                                        Description="If you encounter problems (TDP spikes) with stopping or turning off NHM, turn this off, otherwise do not touch it"/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

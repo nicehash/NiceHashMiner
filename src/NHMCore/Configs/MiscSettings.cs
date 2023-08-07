@@ -104,5 +104,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(SendEvents));
             }
         }
+        private bool _autoResetOC = true;
+        public bool AutoResetOC
+        {
+            get => _autoResetOC;
+            set
+            {
+                _autoResetOC = value;
+                OnPropertyChanged(nameof(AutoResetOC));
+            }
+        }
     }
 }
