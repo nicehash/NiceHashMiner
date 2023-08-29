@@ -114,5 +114,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(AutoResetOC));
             }
         }
+        private bool _enableGPUManagement = true;
+        public bool EnableGPUManagement
+        {
+            get => _enableGPUManagement;
+            set
+            {
+                _enableGPUManagement = value;
+                OnPropertyChanged(nameof(EnableGPUManagement));
+            }
+        }
     }
 }

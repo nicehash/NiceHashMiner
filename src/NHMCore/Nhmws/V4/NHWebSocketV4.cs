@@ -852,6 +852,11 @@ namespace NHMCore.Nhmws.V4
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
                         break;
                     }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
                     var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
                     _ = ExecuteProfilesBundleReset(false);
                     _ = ExecuteProfilesBundleSet(bundle);
@@ -866,6 +871,11 @@ namespace NHMCore.Nhmws.V4
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
                         break;
                     }
                     ExecuteProfilesBundleReset();
@@ -886,6 +896,11 @@ namespace NHMCore.Nhmws.V4
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
                         break;
                     }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
                     var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOCApplied : EventType.TestOCFailed;
@@ -902,12 +917,22 @@ namespace NHMCore.Nhmws.V4
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
                         break;
                     }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
                         break;
                     }
                     var fan = JsonConvert.DeserializeObject<FanProfile>(parameters);
@@ -917,6 +942,11 @@ namespace NHMCore.Nhmws.V4
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
                         break;
                     }
                     (err, result) = StopFanTestForDevice(deviceUUID).Result;
