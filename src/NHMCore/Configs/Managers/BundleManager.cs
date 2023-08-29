@@ -49,6 +49,11 @@ namespace NHMCore.Configs.Managers
             }
             try
             {
+                if (!MiscSettings.Instance.EnableGPUManagement)
+                {
+                    Logger.Warn("BundleManager", "Did not load bundle, Gpu management is disabled");
+                    return;
+                }
                 var content = File.ReadAllText(_path);
                 var bundleToApply = JsonConvert.DeserializeObject<Bundle>(content);
                 if(bundleToApply != null)

@@ -138,12 +138,7 @@ namespace NHMCore
                 case DeviceState.Testing:
                     if (Helpers.IsElevated)
                     {
-                        device.ResetFanSpeed();
-                        device.ResetCoreClock();
-                        device.ResetCoreClockDelta();
-                        device.ResetMemoryClock();
-                        device.ResetMemoryClockDelta();
-                        device.ResetCoreVoltage();
+                        device.ResetEverything();
                     }
 #endif
                     await MiningManager.StopDevice(device);

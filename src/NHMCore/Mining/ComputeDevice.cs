@@ -468,73 +468,161 @@ namespace NHMCore.Mining
 
         public bool SetPowerMode(TDPSimpleType level)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetPowerMode)");
+                return false;
+            }
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
             return false;
         }
         public bool SetPowerModeManual(int TDP)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetPowerModeManual)");
+                return false;
+            }
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDP(TDP);
             return false;
         }
         public bool SetCoreClock(int coreClock)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetCoreClock)");
+                return false;
+            }
             if (CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
             return false;
         }
         public bool SetCoreClockDelta(int coreClockDelta)
         {
-            if(CanSetTDP && DeviceMonitor is ICoreClockSetDelta set) return set.SetCoreClockDelta(coreClockDelta);
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetCoreClockDelta)");
+                return false;
+            }
+            if (CanSetTDP && DeviceMonitor is ICoreClockSetDelta set) return set.SetCoreClockDelta(coreClockDelta);
             return false;
         }
         public bool SetMemoryClock(int memoryClock)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetMemoryClock)");
+                return false;
+            }
             if (CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
             return false;
         }
         public bool SetMemoryClockDelta(int memoryClockDelta)
         {
-            if(CanSetTDP && DeviceMonitor is IMemoryClockSetDelta set) return set.SetMemoryClockDelta(memoryClockDelta);
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetMemoryClockDelta)");
+                return false;
+            }
+            if (CanSetTDP && DeviceMonitor is IMemoryClockSetDelta set) return set.SetMemoryClockDelta(memoryClockDelta);
             return false;
         }
         public bool SetFanSpeedPercentage(int percent)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetFanSpeedPercentage)");
+                return false;
+            }
             if (DeviceMonitor is ISetFanSpeedPercentage set) return set.SetFanSpeedPercentage(percent);
             return false;
         }
         public bool ResetFanSpeed()
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetFanSpeed)");
+                return false;
+            }
             if (DeviceMonitor is IResetFanSpeed set) return set.ResetFanSpeedPercentage();
             return false;
         }
         public bool SetCoreVoltage(int voltage)
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(SetCoreVoltage)");
+                return false;
+            }
             if (DeviceMonitor is ICoreVoltageSet set) return set.SetCoreVoltage(voltage);
             return false;
         }
         public bool ResetCoreVoltage()
         {
-            if(DeviceMonitor is ICoreVoltageSet set) return set.ResetCoreVoltage();
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetCoreVoltage)");
+                return false;
+            }
+            if (DeviceMonitor is ICoreVoltageSet set) return set.ResetCoreVoltage();
             return false;
         }
         public bool ResetCoreClock()
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetCoreClock)");
+                return false;
+            }
             if (DeviceMonitor is ICoreClockSet set) return set.ResetCoreClock();
             return false;
         }
         public bool ResetMemoryClock()
         {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetMemoryClock)");
+                return false;
+            }
             if (DeviceMonitor is IMemoryClockSet set) return set.ResetMemoryClock();
             return false;
         }
         public bool ResetCoreClockDelta()
         {
-            if(DeviceMonitor is ICoreClockSetDelta set) return set.ResetCoreClockDelta();
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetCoreClockDelta)");
+                return false;
+            }
+            if (DeviceMonitor is ICoreClockSetDelta set) return set.ResetCoreClockDelta();
             return false;
         }
         public bool ResetMemoryClockDelta()
         {
-            if(DeviceMonitor is IMemoryClockSetDelta set) return set.ResetMemoryClockDelta();
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetMemoryClockDelta)");
+                return false;
+            }
+            if (DeviceMonitor is IMemoryClockSetDelta set) return set.ResetMemoryClockDelta();
             return false;
+        }
+        public void ResetEverything()
+        {
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetEverything)");
+                return;
+            }
+            if (MiscSettings.Instance.AutoResetOC)
+            {
+                ResetCoreClock();
+                ResetCoreClockDelta();
+                ResetMemoryClock();
+                ResetMemoryClockDelta();
+                ResetCoreVoltage();
+                SetPowerModeManual(TDPLimits.def);
+            }
+            ResetFanSpeed();
         }
 
         #endregion

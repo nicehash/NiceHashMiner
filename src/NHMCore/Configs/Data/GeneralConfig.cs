@@ -95,6 +95,16 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.SendEvents;
             set => MiscSettings.Instance.SendEvents = value;
         }
+        public bool AutoResetOC
+        {
+            get => MiscSettings.Instance.AutoResetOC;
+            set => MiscSettings.Instance.AutoResetOC = value;
+        }
+        public bool EnableGPUManagement
+        {
+            get => MiscSettings.Instance.EnableGPUManagement;
+            set => MiscSettings.Instance.EnableGPUManagement = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -418,6 +428,8 @@ namespace NHMCore.Configs.Data
             AutoUpdateMinerPlugins = true;
             AdvancedMode = false;
             SendEvents = true;
+            AutoResetOC = true;
+            EnableGPUManagement = true;
         }
 
         public void SetValues(GeneralConfigOld configOld)
@@ -484,6 +496,8 @@ namespace NHMCore.Configs.Data
             AutoUpdateMinerPlugins = configOld.AutoUpdateMinerPlugins;
             AdvancedMode = false;
             SendEvents = true;
+            AutoResetOC = true;
+            EnableGPUManagement = true;
         }
 
         public void FixSettingBounds()
