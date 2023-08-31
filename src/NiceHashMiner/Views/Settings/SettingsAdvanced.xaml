@@ -79,7 +79,7 @@
                                         Label="Enable Automatic OC reset (leave this on if you dont know what it is)"
                                         Description="If you encounter problems (TDP spikes) with stopping or turning off NHM, turn this off, otherwise do not touch it"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.EnableGPUManagement}"
-                                        Label="Enable OC and FAN tweaking for GPUs"
+                                        Label="Enable OC and FAN tweaking for GPUs (Disabling may harm your rig)"
                                         Description="This option will enable/disable automatic (as well as manual) settings for fans and overclocking"/>
         </WrapPanel>
         <!--Device Monitoring-->
