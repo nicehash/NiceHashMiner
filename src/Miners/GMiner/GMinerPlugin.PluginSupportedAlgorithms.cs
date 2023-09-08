@@ -36,7 +36,7 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
                         new SAS(AlgorithmType.ZHash){Enabled = false},
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
-                        new SAS(AlgorithmType.IronFish)
+                        new SAS(AlgorithmType.IronFish) {Enabled = false}
                     }
                 },
                 {
@@ -53,7 +53,7 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
                         new SAS(AlgorithmType.ZHash){Enabled = false},
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
-                        new SAS(AlgorithmType.IronFish)
+                        new SAS(AlgorithmType.IronFish) {Enabled = false}
                     }
                 }
             }

@@ -67,7 +67,6 @@ namespace NHMCore
             var failReason = "";
             var allAlgorithmsDisabled = !device.AnyAlgorithmEnabled();
             var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
-            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) isAllZeroPayingState = false;
             // check if device has any benchmakrs
             var needBenchmarkOrRebench = device.AnyEnabledAlgorithmsNeedBenchmarking();
             if (allAlgorithmsDisabled)
@@ -136,12 +135,14 @@ namespace NHMCore
                 case DeviceState.Benchmarking:
 #if NHMWS4
                 case DeviceState.Testing:
+#endif
+                    await MiningManager.StopDevice(device);
+#if NHMWS4
                     if (Helpers.IsElevated)
                     {
                         device.ResetEverything();
                     }
 #endif
-                    await MiningManager.StopDevice(device);
                     return (true, "");
                 default:
                     return (false, $"Cannot handle state {device.State} for device {device.Uuid}");

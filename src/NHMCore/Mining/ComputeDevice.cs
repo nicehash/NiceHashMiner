@@ -611,6 +611,7 @@ namespace NHMCore.Mining
             if (!MiscSettings.Instance.EnableGPUManagement)
             {
                 Logger.Warn("ComputeDevice", "GPU Management is disabled(ResetEverything)");
+                ResetFanSpeed();
                 return;
             }
             if (MiscSettings.Instance.AutoResetOC)
@@ -871,6 +872,7 @@ namespace NHMCore.Mining
 
         public bool AllEnabledAlgorithmsZeroPaying()
         {
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) return false;
             return AlgorithmSettings
                 .Where(a => a.Enabled)
                 .All(a => a.CurrentEstimatedProfit <= 0d);
@@ -921,6 +923,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -933,6 +936,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -945,6 +949,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -957,6 +962,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -969,6 +975,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -981,6 +988,7 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!MiscSettings.Instance.EnableGPUManagement) return string.Empty;
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -1006,6 +1014,10 @@ namespace NHMCore.Mining
         {
             var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null) return;
+            if (!MiscSettings.Instance.EnableGPUManagement)
+            {
+                return;
+            }
             var serializedRunningOC = JsonConvert.SerializeObject(target.RunningOcProfile);
             var serializedRunningELP = JsonConvert.SerializeObject(target.RunningELPProfile);
             var serializedRunningFan = JsonConvert.SerializeObject(target.RunningFanProfile);
@@ -1096,6 +1108,7 @@ namespace NHMCore.Mining
         }
         public void SetFanSpeedWithPidController()
         {
+            if (!MiscSettings.Instance.EnableGPUManagement) return;
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
             var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanProfile ?? null;
