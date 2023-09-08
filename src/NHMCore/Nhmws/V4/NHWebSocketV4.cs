@@ -987,6 +987,10 @@ namespace NHMCore.Nhmws.V4
                     break;
             }
             _ = UpdateMinerStatus();
+            if(err != ErrorCode.NoError)
+            {
+                Logger.Warn(_TAG, $"Action ({typeOfAction}) completed with non zero status: {err}");
+            }
             return Task.FromResult((err, result));
         }
         private static async Task ShutdownRig()

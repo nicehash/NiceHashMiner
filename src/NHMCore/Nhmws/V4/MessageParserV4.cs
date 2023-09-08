@@ -611,7 +611,7 @@ namespace NHMCore.Nhmws.V4
 
 
             MinerState.DeviceState toDeviceState(ComputeDevice d)
-            {
+            {                
                 int deviceStateToInt(DeviceState s) => s switch
                 {
                     DeviceState.Stopped => 1, // READY/IDLE/STOPPED
@@ -622,7 +622,7 @@ namespace NHMCore.Nhmws.V4
                     DeviceState.Disabled => 4, // DISABLED
 #if NHMWS4
                     //DeviceState.Gaming => 6, //GAMING
-                    DeviceState.Testing => 7, //TESTING
+                    DeviceState.Testing => (MiscSettings.Instance.EnableGPUManagement ? 7 : 2), //TESTING
 #endif
                     _ => 0, // UNKNOWN
                 };

@@ -35,7 +35,7 @@ namespace MP.GMiner
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-a ergo -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                    $"-a autolykos2 -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KHeavyHash}",
@@ -64,6 +64,10 @@ namespace MP.GMiner
                 {
                     $"{AlgorithmType.Octopus}",
                     $"-a octopus -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.IronFish}",
+                    $"-a ironfish -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -82,7 +86,7 @@ namespace MP.GMiner
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-a ergo -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                    $"-a autolykos2 -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KHeavyHash}",
@@ -111,8 +115,11 @@ namespace MP.GMiner
                 {
                     $"{AlgorithmType.Octopus}",
                     $"-a octopus -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.IronFish}",
+                    $"-a ironfish -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
-
             }
         };
 
