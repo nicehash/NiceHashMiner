@@ -27,11 +27,11 @@ namespace Excavator
 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.8.6.0",
-                ExePath = new List<string> { "NHQM_v0.6.6.0_RC", "excavator.exe" },
+                BinVersion = "v1.8.6.1",
+                ExePath = new List<string> { "NHQM_v0.6.6.1", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.6.0_RC/NHQM_v0.6.6.0_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.6.1/NHQM_v0.6.6.1.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(22, 0);
+        public override Version Version => new Version(22, 1);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
