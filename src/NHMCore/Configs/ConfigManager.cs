@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
@@ -144,7 +145,18 @@ namespace NHMCore.Configs
         {
             ApplicationStateManager.App.Dispatcher.Invoke(() =>
             {
-                InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                var res = InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                if (!res)
+                {
+                    try
+                    {
+                        EventManager.Instance.AddEventGeneralCfg();
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.Error("ConfigManager", ex.Message);
+                    }
+                }
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
             });
         }

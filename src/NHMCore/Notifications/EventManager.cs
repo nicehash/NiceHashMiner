@@ -105,14 +105,16 @@ namespace NHMCore.Notifications
         public void AddEventDevEnabled(string devName, string devID, bool send = true)
         {
             var type = EventType.DeviceEnabled;
-            var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName });
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName, RigName = worker });
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
         public void AddEventDevDisabled(string devName, string devID, bool send = true)
         {
             var type = EventType.DeviceDisabled;
-            var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName });
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName, RigName = worker });
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
@@ -135,7 +137,9 @@ namespace NHMCore.Notifications
         public void AddEventMissingFiles(bool send = true)
         {
             var type = EventType.MissingFiles;
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = "" };
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { RigName = worker });
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
         public void AddEventVirtualMemInsufficient(bool send = true)
@@ -170,17 +174,20 @@ namespace NHMCore.Notifications
             var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
-        public void AddEventMissingDevice(bool send = true)
+        public void AddEventMissingDevice(string gpuName, bool send = true)
         {
             var type = EventType.MissingDevice;
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow() };
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { RigName = worker, GpuName = gpuName });
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
             AddEvent(type, ev, send);
         }
-        public void AddEventSwitch(string oldAlgo, string newAlgo, bool send = true)
+        public void AddEventSwitch(string gpuName, string devID, string oldAlgo, string newAlgo, bool send = true)
         {
             var type = EventType.AutoSwitch;
-            var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoNameOld = oldAlgo, AlgoNameNew = newAlgo });
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoNameOld = oldAlgo, AlgoNameNew = newAlgo, RigName = worker, GpuName = gpuName });
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
         public void AddEventAlgoEnabled(string deviceID, string plugin, List<string> algos, bool send = true)
@@ -232,6 +239,14 @@ namespace NHMCore.Notifications
             AddEvent(type, ev, send);
         }
 
+        public void AddEventDeviceError(string devName, string devID, bool send = true)
+        {
+            var type = EventType.DeviceError;
+            var worker = CredentialsSettings.Instance.GetCredentials().worker;
+            var content = JsonConvert.SerializeObject(new NhmwsEventContent { RigName = worker, GpuName = devName });
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
+            AddEvent(type, ev, send);
+        }
         private void AddEvent(EventType type, NhmwsEvent ev, bool send = true)
         {
             if (!_init) return;

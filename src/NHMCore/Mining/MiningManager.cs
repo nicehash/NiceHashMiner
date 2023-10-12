@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Managers;
@@ -369,6 +370,7 @@ namespace NHMCore.Mining
                 {
                     Logger.Error("MiningManager", $"{stop.Device.Name} is in error state due to !t.anyAlgoToBenchmark && !t.anyAlgoToMine");
                     stop.Device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                    EventManager.Instance.AddEventDeviceError(stop.Device.Name, stop.Device.B64Uuid);
                 }
 
                 // start and group devices for mining
@@ -945,6 +947,7 @@ namespace NHMCore.Mining
             foreach (var noChangeKey in noChangeGroupMinersKeys)
             {
                 var miningPairs = newGroupedMiningPairs[noChangeKey];
+                if (miningPairs == null) continue;
                 //var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true && p.HasNormalProfileAndCanSet()) || (p.NewTestProfile == true && p.HasTestProfileAndCanSet()));
                 var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewELPProfile == true) || (p.NewTestELPProfile == true));
                 if (miningPairsWithNewProfile == null || miningPairsWithNewProfile.Count() == 0) continue;
@@ -960,9 +963,17 @@ namespace NHMCore.Mining
             //todo logic here to add only those that SHOULD restart (new profile/new test profile)
 
             // first stop currently running
+            List<AlgorithmContainer> startAlgoContainers = new List<AlgorithmContainer>();
+            List<AlgorithmContainer> stopAlgoContainers = new List<AlgorithmContainer>();
             foreach (var stopKey in toStopMinerGroupKeys)
             {
-                var stopGroup = _runningMiners[stopKey];
+                var miningPairs = newGroupedMiningPairs[stopKey];
+                if (miningPairs == null) continue;
+                foreach (var pair in miningPairs)
+                {
+                    stopAlgoContainers.Add(pair);
+                }
+                var stopGroup = _runningMiners[stopKey]; 
                 _runningMiners.Remove(stopKey);
                 await stopGroup.StopTask();
             }
@@ -971,6 +982,11 @@ namespace NHMCore.Mining
             {
                 //todo here access this device to check what is set now and what will be set?
                 var miningPairs = newGroupedMiningPairs[startKey];
+                if (miningPairs == null) continue;
+                foreach (var pair in miningPairs)
+                {
+                    startAlgoContainers.Add(pair);
+                }
                 //EventManager.Instance.AddEventSwitch(true, "", miningPairs.FirstOrDefault()?.AlgorithmName ?? "");
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs);
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
@@ -983,6 +999,28 @@ namespace NHMCore.Mining
                 await toStart.StartMinerTask(_stopMiningManager, _username);
             }
 #if NHMWS4
+            try
+            {
+                var commonItems = startAlgoContainers
+                    .Where(startItem => stopAlgoContainers.Any(stopItem => stopItem.ComputeDevice.B64Uuid == startItem.ComputeDevice.B64Uuid))
+                    .ToList();
+
+                foreach (var item in commonItems)
+                {
+                    var started = startAlgoContainers.FirstOrDefault(i => i.ComputeDevice.B64Uuid == item.ComputeDevice.B64Uuid);
+                    var stopped = stopAlgoContainers.FirstOrDefault(i => i.ComputeDevice.B64Uuid == item.ComputeDevice.B64Uuid);
+                    if(started != null && stopped != null)
+                    {
+                        EventManager.Instance.AddEventSwitch(item.ComputeDevice.Name, item.ComputeDevice.B64Uuid, stopped.AlgorithmName, started.AlgorithmName);
+                        Logger.Info(Tag, $"Switch event occurred");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Tag, $"Error calculating duplicates for switch");
+            }
+
             var miningDevs = AvailableDevices.Devices
                 .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
                 .ToList();

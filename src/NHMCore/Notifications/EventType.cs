@@ -11,8 +11,8 @@ namespace NHMCore.Notifications
         Unknown = 0,
         RigStarted = 1,
         RigStopped = 2,
-        DeviceEnabled = 3,
-        DeviceDisabled = 4,
+        DeviceEnabled = 3, 
+        DeviceDisabled = 4, 
         RigRestart = 5,
         Unknown1 = 6,
         PluginFailiure = 7,
@@ -29,7 +29,7 @@ namespace NHMCore.Notifications
         TestOCApplied = 18,
         TestOCFailed = 19,
         BundleApplied = 20,
-        Unknown3 = 21,
+        DeviceError = 21,
         BenchmarkFailed = 22,
     }
 }

@@ -1,7 +1,9 @@
 using NHM.Common;
+using NHM.Common.Enums;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using NHMCore.Nhmws.V4;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -76,7 +78,10 @@ namespace NHMCore
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
                 var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
                 if (!hasMissingGPUs.isMissing) return;
-                EventManager.Instance.AddEventMissingDevice(true);
+                foreach(var missingItem in hasMissingGPUs.uuids)
+                {
+                    EventManager.Instance.AddEventMissingDevice(missingItem);
+                }
                 if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
@@ -158,6 +163,31 @@ namespace NHMCore
         public static void StopFanProfileTimer()
         {
             _fanProfileTimer?.Stop();
+        }
+        #endregion
+
+        #region DeviceTimer
+        private static AppTimer _deviceTimer;
+
+        public static void StartDeviceCheckTimer()
+        {
+            if (_deviceTimer?.IsActive ?? false) return;
+            _deviceTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
+            {
+                var devs = AvailableDevices.Devices.SortedDevices();
+                foreach (var d in devs)
+                {
+                    if (d.DeviceType != DeviceType.CPU)
+                        NhmwsOverheatDetector.Instance.UpdateTempsAndWarnIfNeeded(d.ID, d.Name, d.B64Uuid, (int)d.Temp, d.VramTemperature);
+                    else
+                        NhmwsOverheatDetector.Instance.UpdateCPUTempsAndWarnIfNeeded(d.ID, d.Name, d.B64Uuid, (int)d.Temp);
+                }
+            }, 30000);
+            _deviceTimer.Start();
+        }
+        public static void StopDeviceCheckTimer()
+        {
+            _deviceTimer?.Stop();
         }
         #endregion
     }

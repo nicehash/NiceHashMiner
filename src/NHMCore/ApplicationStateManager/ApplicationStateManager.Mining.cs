@@ -75,6 +75,7 @@ namespace NHMCore
                 started = false;
                 failReason = "Cannot start a device with all disabled algoirhtms";
                 Logger.Error("ApplicationStateManager", $"{device.Name} is in error state due to all algos being disabled");
+                EventManager.Instance.AddEventDeviceError(device.Name, device.B64Uuid);
             }
             else if (isAllZeroPayingState && !needBenchmarkOrRebench)
             {
@@ -82,6 +83,7 @@ namespace NHMCore
                 started = false;
                 failReason = "No enabled algorithm is profitable";
                 Logger.Error("ApplicationStateManager", $"{device.Name} is in error state due to isAllZeroPayingState && !needBenchmarkOrRebench");
+                EventManager.Instance.AddEventDeviceError(device.Name, device.B64Uuid);
             }
             else
             {
