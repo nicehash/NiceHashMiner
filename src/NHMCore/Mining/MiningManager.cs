@@ -967,11 +967,17 @@ namespace NHMCore.Mining
             List<AlgorithmContainer> stopAlgoContainers = new List<AlgorithmContainer>();
             foreach (var stopKey in toStopMinerGroupKeys)
             {
-                var miningPairs = newGroupedMiningPairs[stopKey];
-                if (miningPairs == null) continue;
-                foreach (var pair in miningPairs)
+                var miningPairs = AvailableDevices.Devices
+                    .SelectMany(d => d.AlgorithmSettings)?
+                    .Where(a => a.IsCurrentlyMining)?
+                    .Where(a => stopKey.Contains(a.ComputeDevice.Uuid))?
+                    .ToList();
+                if (miningPairs != null)
                 {
-                    stopAlgoContainers.Add(pair);
+                    foreach (var pair in miningPairs)
+                    {
+                        stopAlgoContainers.Add(pair);
+                    }
                 }
                 var stopGroup = _runningMiners[stopKey]; 
                 _runningMiners.Remove(stopKey);
@@ -982,12 +988,13 @@ namespace NHMCore.Mining
             {
                 //todo here access this device to check what is set now and what will be set?
                 var miningPairs = newGroupedMiningPairs[startKey];
-                if (miningPairs == null) continue;
-                foreach (var pair in miningPairs)
+                if (miningPairs != null)
                 {
-                    startAlgoContainers.Add(pair);
+                    foreach (var pair in miningPairs)
+                    {
+                        startAlgoContainers.Add(pair);
+                    }
                 }
-                //EventManager.Instance.AddEventSwitch(true, "", miningPairs.FirstOrDefault()?.AlgorithmName ?? "");
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs);
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
