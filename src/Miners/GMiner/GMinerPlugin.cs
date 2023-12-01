@@ -27,11 +27,11 @@ namespace MP.GMiner
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.41",
+                BinVersion = "v3.42",
                 ExePath = new List<string> { "", "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.41/gminer_3_41_windows64.zip" // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.42/gminer_3_42_windows64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -45,7 +45,7 @@ namespace MP.GMiner
 
         public override string Name => "GMiner";
 
-        public override Version Version => new Version(22, 0);
+        public override Version Version => new Version(22, 1);
 
 
         public override string Author => "info@nicehash.com";
@@ -111,7 +111,7 @@ namespace MP.GMiner
             {
                 if (_mappedIDs.Count == 0) return;
                 var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --watchdog 0"); // AMD + NVIDIA
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices"); // AMD + NVIDIA
                 var dumpFile = $"d{DateTime.UtcNow.Ticks}.txt";
                 try
                 {
