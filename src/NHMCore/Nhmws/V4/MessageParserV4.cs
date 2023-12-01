@@ -175,12 +175,12 @@ namespace NHMCore.Nhmws.V4
                     if ((od.type == DeviceDynamicProperties.Temperature ||
                         od.type == DeviceDynamicProperties.HotspotTemp ||
                         od.type == DeviceDynamicProperties.VramTemp ||
-                        od.type == DeviceDynamicProperties.CoreClock ||
                         od.type == DeviceDynamicProperties.MemClock ||
                         od.type == DeviceDynamicProperties.PowerUsage ||
                         od.type == DeviceDynamicProperties.TDP ||
                         od.type == DeviceDynamicProperties.TDPWatts ||
-                        od.type == DeviceDynamicProperties.CoreVoltage) &&
+                        od.type == DeviceDynamicProperties.CoreVoltage
+                        ) &&
                         Int32.TryParse(od.value, out var lessOrEqual) && lessOrEqual <= 0)
                     {
                         if (IgnoredValues.TryGetValue(d.B64Uuid, out var list) &&
@@ -191,7 +191,9 @@ namespace NHMCore.Nhmws.V4
                     }
                     if ((od.type == DeviceDynamicProperties.Load ||
                         od.type == DeviceDynamicProperties.FanSpeedRPM ||
-                        od.type == DeviceDynamicProperties.FanSpeedPercentage) &&
+                        od.type == DeviceDynamicProperties.FanSpeedPercentage ||
+                        od.type == DeviceDynamicProperties.CoreClock
+                        ) &&
                         Int32.TryParse(od.value, out var less) && less < 0)
                     {
                         if (IgnoredValues.TryGetValue(d.B64Uuid, out var list) &&
