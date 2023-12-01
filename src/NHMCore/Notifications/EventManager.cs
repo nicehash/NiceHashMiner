@@ -184,6 +184,7 @@ namespace NHMCore.Notifications
         }
         public void AddEventSwitch(string gpuName, string devID, string oldAlgo, string newAlgo, bool send = true)
         {
+            if (oldAlgo == newAlgo) return;
             var type = EventType.AutoSwitch;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
             var content = JsonConvert.SerializeObject(new NhmwsEventContent { AlgoNameOld = oldAlgo, AlgoNameNew = newAlgo, RigName = worker, GpuName = gpuName });
