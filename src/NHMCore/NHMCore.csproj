@@ -38,7 +38,7 @@
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_NBMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;$(DefineConstants)</DefineConstants>
+    <DefineConstants>INTEGRATE_NBMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_LolMiner_PLUGIN;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -55,7 +55,6 @@
     <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" />
     <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" />
     <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" />
-    <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" />
     <ProjectReference Include="..\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj" />
     <ProjectReference Include="..\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj" />
     <ProjectReference Include="..\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj" />

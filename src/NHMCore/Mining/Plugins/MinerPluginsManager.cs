@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using XMRig;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -58,15 +57,11 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_LolMiner_PLUGIN
                 new LolMinerPlugin(),
 #endif
-#if INTEGRATE_XMRig_PLUGIN
-                new XMRigPlugin(),
-#endif
 
 #if INTEGRATE_ALL_PLUGINS
                 new NBMinerPlugin(),
                 new NanoMinerPlugin(),
                 new LolMinerPlugin(),
-                new XMRigPlugin(),
 #endif
 
             };
