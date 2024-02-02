@@ -695,18 +695,48 @@ namespace NHMCore.Mining.Plugins
             return (uuid,localPluginInfo);
         }
 
+        private static async Task<List<PluginPackageInfo>?> FetchPluginsOnline(int version)
+        {
+            using var client = new NoKeepAliveHttpClient();
+            string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+            PluginsListCacheManager.WritePluginCache(s);
+            return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Culture = CultureInfo.InvariantCulture
+            });
+        } 
+
         private static async Task<bool> GetOnlineMinerPlugins()
         {
             async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
-                using var client = new NoKeepAliveHttpClient();
-                string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
-                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                var shouldUpdate = await PluginsListCacheManager.CheckIfShouldUpdateAndUpdateLatestDate(Links.PluginsJsonApiUrl);
+                if (shouldUpdate)
                 {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    Culture = CultureInfo.InvariantCulture
-                });
+                    return await FetchPluginsOnline(version);
+                }
+                var readPluginList = PluginsListCacheManager.ReadPluginCache();
+                if(readPluginList == string.Empty)
+                {
+                    return await FetchPluginsOnline(version);
+                }
+                try
+                {
+                    var deserialized = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(readPluginList, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
+                    return deserialized;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("MinerPluginsManager", $"Error occured while deserializing cached plugins: {ex.Message}");
+                    return await FetchPluginsOnline(version);
+                }
             }
             try
             {
