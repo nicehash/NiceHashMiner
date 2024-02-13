@@ -2538,7 +2538,7 @@
       "es": "Límite inferior para el intervalo de comprobación de ganancias elegido al azar.\nNo se debe fijar un valor demasiado bajo.",
       "pt": "Limite inferior para o intervalo de verificação de lucro escolhido aleatoriamente.\nNão defina muito baixo.",
       "jp": "ランダムな収益性確認間隔の下限値。\nあまり低く設定しないでください。",
-      "zh_cn": "Lower bound for the randomly chosen profit check interval.\nDo not set too low.",
+      "zh_cn": "随机选择的利润检查间隔的下界。\n不要设置得太低。",
       "si": "Spodnja meja za naključno izbran interval preverjanja dobička.\nNe nastavite prenizko."
     },
     "MINER": {
@@ -2558,7 +2558,7 @@
       "es": "Principal",
       "pt": "Principal",
       "jp": "メイン",
-      "zh_cn": "Main",
+      "zh_cn": "主要",
       "si": "Glavni"
     },
     "Main:": {
@@ -2578,7 +2578,7 @@
       "es": "Minar, independientemente de la ganancia",
       "pt": "Minerar Independentemente do Lucro",
       "jp": "収益に関係なくマイニング実行",
-      "zh_cn": "Mine Regardless Of Profit",
+      "zh_cn": "无论利润如何都挖矿",
       "si": "Rudari Neglede Na Profit"
     },
     "Miner": {
@@ -2598,7 +2598,7 @@
       "es": "El minero \"{0}\" fue reiniciado en {1}",
       "pt": "O minerador \"{0}\" foi reiniciado às {1}",
       "jp": "マイナー「{0}」は {1} のため再起動しました。",
-      "zh_cn": "Miner \"{0}\" was restarted at {1}",
+      "zh_cn": "Miner \"{0}\" 将会在 {1} 后重启",
       "si": "Rudar \"{0}\" je bil zagnan ob {1}"
     },
     "Miner API Grace [s]": {
@@ -2628,7 +2628,7 @@
       "es": "Actualización del complemento minero",
       "pt": "Atualização do Plugin Minerador",
       "jp": "マイナープラグインアップデート",
-      "zh_cn": "Miner Plugin Update",
+      "zh_cn": "Miner 插件更新",
       "si": "Posodobitev vtičnika Rudarja"
     },
     "Miner Restart Delay [ms]:": {
@@ -2648,7 +2648,7 @@
       "es": "Velocidad extrema del minero detectada",
       "pt": "Detetada velocidade extrema do minerador",
       "jp": "マイナーで極端なハッシュレートを検出",
-      "zh_cn": "Miner extreme speed detected",
+      "zh_cn": "Miner 极限速度检测到",
       "si": "Zaznana ekstremna hitrost rudarja"
     },
     "Miner restarted": {
@@ -2658,7 +2658,7 @@
       "es": "Minero reiniciado",
       "pt": "Minerador reiniciado",
       "jp": "マイナーが再起動しました",
-      "zh_cn": "Miner restarted",
+      "zh_cn": "Miner 已经重启",
       "si": "Rudar ponovno zagnan"
     },
     "Miner speed fluctuations noticed": {
@@ -2668,7 +2668,7 @@
       "es": "Se notan fluctuaciones en la velocidad del minero",
       "pt": "Foram detetadas flutuações na velocidade de mineração",
       "jp": "マイナーでハッシュレート変動を検知",
-      "zh_cn": "Miner speed fluctuations noticed",
+      "zh_cn": "Miner 速度变更通知",
       "si": "Zaznana so nihanja hitrosti Rudarja"
     },
     "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.": {
@@ -2678,7 +2678,7 @@
       "es": "El minero se ha reiniciado debido a la gran diferencia entre la velocidad de la referencia y la velocidad del minero. Por favor, vuelva a realizar la referencia de la GPU #{0} {1} con {2}. De lo contrario, reinstale los controladores de la GPU siguiendo esta guía.",
       "pt": "O minerador foi reiniciado devido à grande diferença entre a velocidade de benchmark e a velocidade do minerador. Faça um novo benchmark da GPU #{0} {1} com {2}. Caso contrário, reinstale os drivers da GPU seguindo este guia.",
       "jp": "ベンチマーク結果と実測値の乖離が大きくなったため、マイナーが再起動しました。GPU #{0} {1} で {2} を再度ベンチマークするか、こちらのガイドに沿ってGPUドライバーを再インストールして下さい。",
-      "zh_cn": "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.",
+      "zh_cn": "由于基准测试速度与矿工速度之间的差异较大，矿工已重新启动。请使用 {2} 重新对 GPU #{0} {1} 进行基准测试。否则，请按照此指南重新安装 GPU 驱动程序。",
       "si": "Rudar je bil znova zagnan zaradi velike razlike med primerjalno hitrostjo in hitrostjo rudarja. Ponovno primerjajte GPU #{0} {1} z {2}. V nasprotnem primeru znova namestite gonilnike GPU, tako da sledite tem navodilom."
     },
     "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]": {
@@ -2738,7 +2738,7 @@
       "es": "Tiempo mínimo detenido [s]",
       "pt": "Tempo Minimo Ocioso [s]",
       "jp": "最小アイドル値 [s]",
-      "zh_cn": "Minimum Idle [s]",
+      "zh_cn": "最小空闲时间 [s]",
       "si": "Minimum Idle [s]"
     },
     "Minimum Idle [s]:": {
@@ -2778,7 +2778,7 @@
       "es": "Minería / Referencia",
       "pt": "Minerando / Benchmarking",
       "jp": "マイニング / ベンチマーク",
-      "zh_cn": "Mining / Benchmarking",
+      "zh_cn": "挖矿中 / 基准测试中",
       "si": "Rudarjenje / Primerjalno Analiziranje"
     },
     "Mining Devices {0}:": {
@@ -2798,7 +2798,7 @@
       "es": "La minería no es rentable",
       "pt": "Mineração não dá lucro",
       "jp": "マイニングは赤字です",
-      "zh_cn": "Mining not profitable",
+      "zh_cn": "挖矿不适合",
       "si": "Rudarjenje ni profitabilno"
     },
     "Misc:": {
@@ -2818,7 +2818,7 @@
       "es": "Varios",
       "pt": "Diversos",
       "jp": "その他",
-      "zh_cn": "Miscellaneous",
+      "zh_cn": "杂项",
       "si": "Razno"
     },
     "Missing GPUs": {
@@ -2828,7 +2828,7 @@
       "es": "Faltan GPUs",
       "pt": "GPUs Ausentes",
       "jp": "GPUがありません",
-      "zh_cn": "Missing GPUs",
+      "zh_cn": "缺少 GPUs",
       "si": "Manjkajo GPUji"
     },
     "Missing SMA": {
@@ -2838,7 +2838,7 @@
       "es": "Falta el SMA",
       "pt": "SMA Ausente",
       "jp": "SMAがありません",
-      "zh_cn": "Missing SMA",
+      "zh_cn": "缺少 SMA",
       "si": "Manjka SMA"
     },
     "Missing miner binaries": {
@@ -2848,7 +2848,7 @@
       "es": "Faltan los binarios del minero",
       "pt": "Arquivos do minerador ausentes",
       "jp": "マイナーバイナリがありません",
-      "zh_cn": "Missing miner binaries",
+      "zh_cn": "缺少 miner 二进制文件",
       "si": "Manjkajoče binarne datoteke rudarja"
     },
     "Missing miner files": {
@@ -2858,7 +2858,7 @@
       "es": "Faltan los archivos del minero",
       "pt": "Arquivos do minerador ausentes",
       "jp": "マイナーファイルがありません",
-      "zh_cn": "Missing miner files",
+      "zh_cn": "缺少 miner 文件",
       "si": "Manjkajoče datoteke rudarja"
     },
     "Month": {
@@ -2878,7 +2878,7 @@
       "es": "Más información",
       "pt": "Mais Informações",
       "jp": "詳細を表示",
-      "zh_cn": "More Info",
+      "zh_cn": "详细信息",
       "si": "Več Informacij"
     },
     "N/A": {
@@ -2898,7 +2898,7 @@
       "es": "NHMWS no conectado",
       "pt": "Não está conectado a NHMWS",
       "jp": "NHMWSが接続されていません",
-      "zh_cn": "NHMWS not connected",
+      "zh_cn": "NHMWS 未连接",
       "si": "NHMWS ni povezan"
     },
     "NONE": {
@@ -2908,7 +2908,7 @@
       "es": "NADA",
       "pt": "NENHUM",
       "jp": "注意事項",
-      "zh_cn": "NONE",
+      "zh_cn": "注意事项",
       "si": "BREZ"
     },
     "NOT COMPATIBLE. Update NiceHash Miner": {
@@ -2918,7 +2918,7 @@
       "es": "NO COMPATIBLE. Actualizar NiceHash Miner",
       "pt": "NÃO COMPATÍVEL. Atualize o NiceHash Miner",
       "jp": "互換性がありません。NiceHash Minerをアップデートしてください。",
-      "zh_cn": "NOT COMPATIBLE. Update NiceHash Miner",
+      "zh_cn": "不兼容，请更新 NiceHash Miner。",
       "si": "NI KOMPATIBIONO. Posodobi NiceHash Miner"
     },
     "NVIDIA TDP Settings Insufficient Permissions": {
@@ -2928,7 +2928,7 @@
       "es": "Configuración de TDP de NVIDIA Permisos insuficientes",
       "pt": "Permissões Insuficientes para Configurar TDP NVIDIA",
       "jp": "NVIDIA TDP設定の権限がありません",
-      "zh_cn": "NVIDIA TDP Settings Insufficient Permissions",
+      "zh_cn": "NVIDIA TDP 设置权限不够",
       "si": "Ni zadostnih dovoljenj za nastavitve NVIDIA TDP"
     },
     "NVIDIA/CUDA": {
@@ -2958,7 +2958,7 @@
       "es": "Una nueva versión de NiceHash Miner está disponible.",
       "pt": "Está disponível uma nova versão do NiceHash Miner.",
       "jp": "NiceHash Minerの新バージョンが利用可能です。",
-      "zh_cn": "New version of NiceHash Miner is available.",
+      "zh_cn": "新版本的 NiceHash Miner 已经存在.",
       "si": "Nova različica NiceHash Miner je na voljo."
     },
     "New version of {0} {1}.\n": {
@@ -2968,7 +2968,7 @@
       "es": "Nueva versión de {0} {1}.\n",
       "pt": "Nova versão do {0} {1}.\n",
       "jp": "{0} {1} の新バージョン\n",
-      "zh_cn": "New version of {0} {1}.\n",
+      "zh_cn": "新版本中的 {0} {1}.\n",
       "si": "Nova verzija {0} {1}.\n"
     },
     "NiceHash Miner Update": {
@@ -2978,7 +2978,7 @@
       "es": "Actualización de NiceHash Miner",
       "pt": "Atualização do NiceHash Miner",
       "jp": "NiceHash Minerアップデート",
-      "zh_cn": "NiceHash Miner Update",
+      "zh_cn": "NiceHash Miner 更新",
       "si": "NiceHash Miner Posodobitev"
     },
     "NiceHash Miner Update Failed": {
@@ -2988,7 +2988,7 @@
       "es": "La actualización de NiceHash Miner ha fallado",
       "pt": "A Atualização do NiceHash Miner Falhou",
       "jp": "NiceHash Minerアップデート失敗",
-      "zh_cn": "NiceHash Miner Update Failed",
+      "zh_cn": "NiceHash Miner 更新失败",
       "si": "NiceHash Miner Posodobitev Neuspešna"
     },
     "NiceHash Miner Window Always on Top": {
@@ -2998,7 +2998,7 @@
       "es": "Ventana de NiceHash Miner siempre arriba",
       "pt": "Janela do NiceHash Miner Sempre no Topo",
       "jp": "NiceHash Minerを常に一番上に表示",
-      "zh_cn": "NiceHash Miner Window Always on Top",
+      "zh_cn": "NiceHash Miner 窗口将会保持在最前",
       "si": "NiceHash Miner Okno Vedno na Vrhu"
     },
     "NiceHash Miner and Plugins Update": {
@@ -3008,7 +3008,7 @@
       "es": "Actualización de NiceHash Miner y complementos",
       "pt": "Atualização do NiceHash Miner e dos Plugins",
       "jp": "NiceHash Minerとプラグインのアップデート",
-      "zh_cn": "NiceHash Miner and Plugins Update",
+      "zh_cn": "NiceHash Miner 和插件更新",
       "si": "NiceHash Miner in posodobitev vtičnikov"
     },
     "NiceHash Miner can't obtain CPU information": {
@@ -3018,7 +3018,7 @@
       "es": "NiceHash Miner no puede obtener información de la CPU",
       "pt": "O NiceHash Miner não consegue obter a informação da CPU",
       "jp": "NiceHash MinerがCPU情報を取得できません",
-      "zh_cn": "NiceHash Miner can't obtain CPU information",
+      "zh_cn": "NiceHash Miner 无法获得CPU信息",
       "si": "NiceHash Miner ne more pridobiti informacij o CPU procesorju"
     },
     "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
@@ -3028,7 +3028,7 @@
       "es": "NiceHash Miner no puede empezar a minar. Asegúrese de que tiene al menos un dispositivo habilitado que tiene al menos un algoritmo habilitado y referenciado.",
       "pt": "O NiceHash Miner não pode iniciar a mineração. Certifique-se de ter pelo menos um dispositivo habilitado que tenha pelo menos um algoritmo habilitado com o benchmark feito.",
       "jp": "NiceHash Minerがマイニングを開始できません。有効なデバイス・ベンチマークされたアルゴリズムが、少なくとも1つは必要です。",
-      "zh_cn": "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.",
+      "zh_cn": "NiceHash Miner 无法开始挖矿，确保你有至少一个启用的至少基准测试了一个算法的设备",
       "si": "NiceHash Miner ne more začeti rudariti. Prepričajte se, da imate vsaj eno omogočeno napravo, ki ima vsaj en omogočen in preverjen algoritem."
     },
     "NiceHash Miner can’t monitor CPU": {
@@ -3038,7 +3038,7 @@
       "es": "NiceHash Miner no puede monitorizar la CPU",
       "pt": "O NiceHash Miner não consegue monitorar a CPU",
       "jp": "NiceHash MinerがCPUを監視できません",
-      "zh_cn": "NiceHash Miner can’t monitor CPU",
+      "zh_cn": "NiceHash Miner 无法监控 CPU",
       "si": "NiceHash Miner ne more spremljati CPU procesorja"
     },
     "NiceHash Miner folder doesn't have write access. This can prevent some features from working.": {
