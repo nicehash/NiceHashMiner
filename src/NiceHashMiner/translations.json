@@ -248,7 +248,7 @@
       "es": "Cantidad de BTC que aún no se le ha pagado.",
       "pt": "Quantia em BTC que ainda não lhe foi paga.",
       "jp": "BTCの未受取り額",
-      "zh_cn": "未支付给您的BTC金额。",
+      "zh_cn": "未支付给您的比特币金额。",
       "si": "Znesek še neizplačanega BTC."
     },
     "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {
@@ -258,7 +258,7 @@
       "es": "Cantidad de tiempo (en milisegundos) que NiceHash Miner esperará antes de reiniciar el minero.",
       "pt": "Quantidade de tempo (em milissegundos) que NiceHash Miner aguardará antes de reiniciar o minerador.",
       "jp": "NiceHash Minerのマイナーリスタートまでの待機時間 (ms)",
-      "zh_cn": "切换算法时，NiceHash Miner自中止到重启挖矿程序之间等待的延迟（毫秒）。",
+      "zh_cn": "切换算法时，NiceHash Miner从中止到重启挖矿程序之间等待的延迟（毫秒）。",
       "si": "Čas (v milisekundah), ki bo pretekel, preden NiceHash Miner ponovno zažene Rudarja."
     },
     "Appearance": {
@@ -278,7 +278,7 @@
       "es": "¿Está seguro de que desea borrar todas las velocidades para {0}?",
       "pt": "Tem a certeza de que deseja limpar todas as velocidades para {0}?",
       "jp": "{0} のすべてのハッシュレートを削除しますか？",
-      "zh_cn": "您是否确定要清除所有 {0} 的算力速度？",
+      "zh_cn": "您是否确定要清除所有 {0} 的算力？",
       "si": "Ali ste prepričani, da želite počistiti vse hitrosti za {0}?"
     },
     "Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically.": {
@@ -408,7 +408,7 @@
       "es": "Referencia pendiente",
       "pt": "Benchmark Pendente",
       "jp": "ベンチマーク中",
-      "zh_cn": "基准测试待处理中",
+      "zh_cn": "等待基准测试中",
       "si": "Primerjalna analiza v čakanju"
     },
     "Benchmark Speed": {
@@ -418,7 +418,7 @@
       "es": "Velocidad del referencia",
       "pt": "Velocidade de Benchmark",
       "jp": "ベンチマークハッシュレート",
-      "zh_cn": "测得速率",
+      "zh_cn": "测得算力",
       "si": "Hitrost primerjalne analize"
     },
     "Benchmark Speed (H/s)": {
@@ -548,7 +548,7 @@
       "es": "Dirección de billetera de Bitcoin",
       "pt": "Endereço de Carteira Bitcoin",
       "jp": "ビットコインウォレットアドレス",
-      "zh_cn": "Bitcoin钱包地址",
+      "zh_cn": "比特币钱包地址",
       "si": "Naslov Bitcoin Denarnice"
     },
     "Blog: ": {
@@ -588,7 +588,7 @@
       "es": "Al ejecutar el NiceHash Miner o NHM (abreviado) estás conectando tu PC o equipo de minería al mercado de potencia de hash de NiceHash. NiceHash Miner le permite alquilar la potencia de cálculo de su equipo y, a cambio, ganar bitcoins. Para saber más sobre el funcionamiento de NiceHash, ",
       "pt": "Ao executar o NiceHash Miner ou NHM (abreviado), você está a conectar o seu PC ou rig de mineração ao mercado de hashpower da NiceHash. O NiceHash Miner permite-lhe alugar o poder de computação do seu equipamento e, em retorno, você ganha bitcoins. Para saber mais como a NiceHash funciona, ",
       "jp": "NiceHash Miner (NHM) を起動すると、PCやマイニングリグがNiceHashのハッシュパワーマーケットプレイスにに接続されます。NiceHash Minerでお持ちの機器の計算能力を貸し出すことで、ビットコインを獲得できます。NiceHashの仕組みについては、 ",
-      "zh_cn": "通过运行NiceHash Miner或NHM软件，您将会将你的呢PC或矿机连接到NiceHash的算力市场，NiceHash Miner使得您可以出租您的算力，并获得比特币收益。了解更多NiceHash平台的信息， ",
+      "zh_cn": "通过运行NiceHash Miner或NHM软件，您将会将你的PC或矿机连接到NiceHash的算力市场，NiceHash Miner使得您可以出租您的算力，并获得比特币收益。了解更多NiceHash平台的信息， ",
       "si": "Z zagonom NiceHash Minerja oziroma NHM (skrajšano) povezuješ svoj PC ali napravo za rudarjenje na NiceHash trg računske moči. NiceHash Miner ti omogoča, da oddajaš računsko moč računalnika in v zameno služiš bitcoine. Če želiš izvedeti več o delovanju NiceHash, "
     },
     "CURRENT PROFITABILITY": {
@@ -1068,7 +1068,7 @@
       "es": "Cruce de IDs de dispositivos mineros...",
       "pt": "Referência cruzada de IDs de dispositivos de mineração...",
       "jp": "マイナーデバイスIDの相互参照",
-      "zh_cn": "Cross referencing miner device IDs...",
+      "zh_cn": "正在交叉引用矿工设备ID...",
       "si": "Navzkrižno sklicevanje na ID-je naprav Rudarja..."
     },
     "Currency": {
@@ -1138,7 +1138,7 @@
       "es": "¡MODO DEMO y no ganará Bitcoins!",
       "pt": "MODO DE DEMONSTRAÇÃO e não vai ganhar Bitcoins!",
       "jp": "デモモードのためビットコインは得られません！",
-      "zh_cn": " DEMO模式下您将无法赚得任何实质的Bitcoin！",
+      "zh_cn": " DEMO模式下您将无法赚得任何实质的比特币！",
       "si": "NAČIN PREIZKUSA, v tem načine ne prejmete Bitcoin izplačil!"
     },
     "DEMO mode will not earn Bitcoins!": {
@@ -1148,7 +1148,7 @@
       "es": "¡El modo DEMO no permite ganar Bitcoins!",
       "pt": "MODO DE DEMONSTRAÇÃO não vai ganhar Bitcoins!",
       "jp": "デモモードのためビットコインは得られません！",
-      "zh_cn": "DEMO模式下您将无法赚得任何实质的Bitcoin！",
+      "zh_cn": "DEMO模式下您将无法赚得任何实质的比特币！",
       "si": "NAČIN PREIZKUSA, ne prejmete Bitcoin izplačil!"
     },
     "DEVICES MINING": {
@@ -1268,7 +1268,7 @@
       "es": "Algoritmo desviado",
       "pt": "Algoritmo Divergente",
       "jp": "逸脱アルゴリズム",
-      "zh_cn": "Deviant Algorithm",
+      "zh_cn": "非典型算法",
       "si": "Deviantni algoritem"
     },
     "Device": {
@@ -1308,7 +1308,7 @@
       "es": "Referencia cruzada de dispositivos",
       "pt": "Referências Cruzadas dos Dispositivos",
       "jp": "デバイス相互参照",
-      "zh_cn": "Devices Cross Reference",
+      "zh_cn": "交叉设备参照",
       "si": "Navzkrižna referenca naprav"
     },
     "Devices/Algorithms": {
@@ -1628,7 +1628,7 @@
       "es": "Activar la consola de depuración",
       "pt": "Ativar Consola de Depuração",
       "jp": "デバッグコンソールを有効化",
-      "zh_cn": "Enable Debug Console",
+      "zh_cn": "打开调试控制台",
       "si": "Omogoči Konzolo za Razhroščevanje"
     },
     "Enable Device": {
@@ -1858,7 +1858,7 @@
       "es": "Parte fija del tiempo máximo (en segundos) antes de que el minero cambie de algoritmo.",
       "pt": "Tempo máximo (em segundos) antes do minerador mudar o algoritmo.",
       "jp": "マイナーがアルゴリズムを切り替えるまでの最大時間 (秒) を修正しました。",
-      "zh_cn": "Fixed part of maximum time (in seconds) before miner switches algorithm.",
+      "zh_cn": "在切换算法之前的最长固定时间（以秒为单位）。",
       "si": "Fiksni del največjega časa (v sekundah), preden rudar preklopi algoritem."
     },
     "Fixed part of minimal time (in seconds) before miner switches algorithm.": {
@@ -1868,7 +1868,7 @@
       "es": "Parte fija del tiempo mínima (en segundos) antes de que el minero cambie de algoritmo.",
       "pt": "Tempo mínimo (em segundos) antes do minerador mudar o algoritmo.",
       "jp": "マイナーがアルゴリズムを切り替えるまでの最小時間 (秒) を修正しました。",
-      "zh_cn": "Fixed part of minimal time (in seconds) before miner switches algorithm.",
+      "zh_cn": "在切换算法之前的最短固定时间（以秒为单位）。",
       "si": "Fiksni del najmanjšega časa (v sekundah), preden rudar preklopi algoritem."
     },
     "Folder lacks permissions": {
@@ -1878,7 +1878,7 @@
       "es": "La carpeta carece de permisos",
       "pt": "Não tem permissões suficientes na pasta",
       "jp": "フォルダーに権限がありません",
-      "zh_cn": "Folder lacks permissions",
+      "zh_cn": "文件夹权限缺失",
       "si": "Mapa nima dovoljenj"
     },
     "GPU’S": {
@@ -1908,7 +1908,7 @@
       "es": "Generar un nuevo código QR",
       "pt": "Criar novo código QR",
       "jp": "新しくQRコードを生成",
-      "zh_cn": "生成新的QR二维码",
+      "zh_cn": "生成新的二维码",
       "si": "Generiraj novo QR Kodo"
     },
     "Help": {
@@ -2098,7 +2098,7 @@
       "es": "Si se activa NiceHash Miner dejará de minar sin conexión a Internet",
       "pt": "Se habilitado, o NiceHash Miner irá parar a mineração quando o computador não estiver conectado à internet",
       "jp": "この機能を有効化すると、インターネット接続がない場合にNiceHash Minerはマイニングを停止します。",
-      "zh_cn": "If enabled NiceHash Miner will stop mining without internet connectivity",
+      "zh_cn": "如果启用，NiceHash Miner将会在断网时停止挖矿。",
       "si": "Če je ta opcija omogočena, bo NiceHash Miner ustavil rudarjenje brez internetne povezave"
     },
     "If enabled {0} will stop mining without internet connectivity": {
@@ -2118,7 +2118,7 @@
       "es": "Si se activa, NHML hará una referencia de todos los valores de dcri listados y almacenará las velocidades.\nNHML utilizará entonces la combinación de velocidad más rentable para la minería.\nEste modo ignora el parámetro de lanzamiento extra -dcri.",
       "pt": "Se ativado, o NHML fará o benchmark através de todos os valores dcri listados e armazenará as velocidades.\nO NHML usará então a combinação de velocidade mais lucrativa para mineração.\nEste modo ignora o parâmetro -dcri Extra Launch.",
       "jp": "この機能を有効化すると、NHMLはリストアップされたすべての dcri値をベンチマークして、ハッシュレートを保存します。\nNHMLは最も収益性の高いハッシュレートの組み合わせをマイニングに利用します。\nこのモードでは「-dcri Extra Launch」パラメータは無視されます。",
-      "zh_cn": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+      "zh_cn": "如果启用，NHML将通过所有列出的 dcri 值进行基准测试，并存储速度。\n然后 NHML 将使用最有利的速度组合进行挖矿。\n该模式会忽略 -dcri 附加启动参数。",
       "si": "Če je omogočeno, bo NHML primerjal vse navedene vrednosti dcri in shranil hitrosti.\nNHML bo nato uporabil najbolj donosno kombinacijo hitrosti za rudarjenje.\nTa način prezre parameter dodatnega zagona -dcri."
     },
     "If enabled, {0} will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
@@ -2138,7 +2138,7 @@
       "es": "Si continúa sin añadir su dirección de billetera, estará minando en ",
       "pt": "Se você continuar sem adicionar o seu Endereço de Carteira você vai minerar no ",
       "jp": "ウォレットアドレスを追加せずに進める場合にマイニングで利用するアドレス： ",
-      "zh_cn": "If you continue without adding your Wallet Address you will be mining in ",
+      "zh_cn": "如果你在不添加钱包地址的情况下继续挖坑 ",
       "si": "Če nadaljujete brez dodajanje Naslova Denarnice boste rudarili v "
     },
     "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.": {
@@ -2148,7 +2148,7 @@
       "es": "Incluya este alrogitmo en las sesiones de referencia (en el próximo inicio de la referencia o del dispositivo). Esto garantizará la mejor tasa de hash posible.",
       "pt": "Incluir este algoritmo nas sessões de benchmark (no próximo benchmark ou inicialização do dispositivo). Isso irá assegurar a melhor hashrate possível.",
       "jp": "(次回のベンチマーク・デバイス起動時に) ベンチマークセッションにこのアルゴリズムを含める。これにより、可能な限り最高のハッシュレートが保証されます。",
-      "zh_cn": "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.",
+      "zh_cn": "在基准测试会话中包含此算法（在下次基准测试或设备启动时）。这将确保获得最佳的算力。",
       "si": "Vključi ta algoritem v primarjalno analizo (ob naslednjem zagonu ali primerjalnem analiziranju). To bo zagotovilo najboljšo računsko moč."
     },
     "Increase virtual memory": {
@@ -2158,7 +2158,7 @@
       "es": "Incremente la memoria virtual",
       "pt": "Aumente a memória virtual",
       "jp": "仮想メモリを増設",
-      "zh_cn": "Increase virtual memory",
+      "zh_cn": "增加虚拟内存",
       "si": "Povečaj virtualni spomin"
     },
     "India - Chennai": {
@@ -2178,7 +2178,7 @@
       "es": "Iniciar la monitorización del dispositivo",
       "pt": "Inicializando o monitoramento do dispositivo",
       "jp": "デバイス監視の初期化中",
-      "zh_cn": "Initializing device monitoring",
+      "zh_cn": "初始化设备监控中",
       "si": "Vključevanje nadziranja naprave"
     },
     "Input Error": {
@@ -2198,7 +2198,7 @@
       "es": "Tiempo de espera de entrada",
       "pt": "Tempo Limite de Inserção Excedido",
       "jp": "入力タイムアウト",
-      "zh_cn": "Input Timeout",
+      "zh_cn": "输入超时",
       "si": "Časovna omejitev vnosa"
     },
     "Intensity": {
@@ -2248,7 +2248,7 @@
       "es": "¡Dirección de Bitcoin inválida! {0} comenzará a minar en modo DEMO. En el modo DEMO, puedes probar el minero y ver cuánto puedes ganar usando tu ordenador. ¿Desea continuar en el modo DEMO?\n\nDESCARGO DE RESPONSABILIDAD: ¡NO GANARÁ NADA DURANTE EL MODO DEMO!",
       "pt": "Endereço de Bitcoin invalido! {0} vai começar a minerar no modo de DEMONSTRAÇÃO. No modo de DEMONSTRAÇÃO você pode testar o minerador e poderá ver quanto pode ganhar usando o seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO GANHARÁ NADA DURANTE O MODO DE DEMONSTRAÇÃO!",
       "jp": "ビットコインアドレスが無効です！{0} はDEMOモードでマイニングを行います。デモモードでは、マイナーをテストすることで、お持ちのコンピューターでの収益性を確認することができます。デモモードで続けますか？\n\n免責事項：デモモードでは報酬は支払われません。",
-      "zh_cn": "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!",
+      "zh_cn": "错误的比特币地址! {0} 将会以 DEMO 模式启动. 在 DEMO 模式中启动时, 你可以测试Miner能在你的电脑中赚到多少钱. 你真的要以 DEMO 模式继续吗?\n\n免责声明: 你将不会赚取到任何东西!",
       "si": "Neveljaven naslov Bitcoin! {0} bo začel rudariti v DEMO načinu. V DEMO načinu lahko preizkusite zagon rudarja in vidite, koliko lahko zaslužite z računalnikom. Ali želite nadaljevati v DEMO načinu?\n\nOPOZORILO: V DEMO NAČINU NE BOSTE NIČ ZASLUŽILI!"
     },
     "Invalid benchmark speed!": {
@@ -2338,7 +2338,7 @@
       "es": "Cambio de idioma",
       "pt": "Alteração do idioma",
       "jp": "言語変更",
-      "zh_cn": "Language change",
+      "zh_cn": "变更语言",
       "si": "Sprememba jezika"
     },
     "Language:": {
@@ -2358,7 +2358,7 @@
       "es": "Última versión en línea: ",
       "pt": "Versão online mais recente: ",
       "jp": "最新のオンラインバージョン： ",
-      "zh_cn": "Latest online version: ",
+      "zh_cn": "最新的上线版本: ",
       "si": "Najnovejša online različica: "
     },
     "Less Details": {
@@ -2368,7 +2368,7 @@
       "es": "Menos detalles",
       "pt": "Menos Detalhes",
       "jp": "詳細表示を減らす",
-      "zh_cn": "Less Details",
+      "zh_cn": "更少的信息",
       "si": "Manj Podrobnosti"
     },
     "Less Info": {
@@ -2378,7 +2378,7 @@
       "es": "Menos información",
       "pt": "Menos Informações",
       "jp": "情報表示を減らす",
-      "zh_cn": "Less Info",
+      "zh_cn": "更少的信息",
       "si": "Manj Informacij"
     },
     "Less Threads": {
@@ -2388,7 +2388,7 @@
       "es": "Núcleos",
       "pt": "Menos Tópicos",
       "jp": "Less Threads",
-      "zh_cn": "Less Threads",
+      "zh_cn": "更少的线程",
       "si": "Less Threads"
     },
     "LessThreads greater than number of threads per CPU. Ignore setting.": {
@@ -2418,7 +2418,7 @@
       "es": "Carga",
       "pt": "Utilização",
       "jp": "負荷",
-      "zh_cn": "载入",
+      "zh_cn": "占用",
       "si": "Obremenitev"
     },
     "Load (%)": {
@@ -2428,7 +2428,7 @@
       "es": "Carga (%@)",
       "pt": "Carga (%)",
       "jp": "ロード (%)",
-      "zh_cn": "Load (%)",
+      "zh_cn": "占用 (%)",
       "si": "Obremenitev (%)"
     },
     "Loading miner plugins...": {
@@ -2438,7 +2438,7 @@
       "es": "Cargando los plugins del minero...",
       "pt": "Carregando os plugins mineradores...",
       "jp": "マイナープラグインロード中...",
-      "zh_cn": "Loading miner plugins...",
+      "zh_cn": "加载Miner插件中...",
       "si": "Nalaganje rudarskih vtičnikov..."
     },
     "Loading, please wait...": {
@@ -2458,7 +2458,7 @@
       "es": "Localización",
       "pt": "Preferências Regionais",
       "jp": "ローカリゼーション",
-      "zh_cn": "Localization",
+      "zh_cn": "本土化",
       "si": "Lokalizacija"
     },
     "Localization:": {
@@ -2478,7 +2478,7 @@
       "es": "Tamaño máximo del archivo de registro (bytes)",
       "pt": "Tamanho Máximo do Arquivo de Registo (bytes)",
       "jp": "ログファイル上限サイズ (bytes)",
-      "zh_cn": "Log Max File Size (bytes)",
+      "zh_cn": "最大日志文件大小 (bytes)",
       "si": "Največja velikost datoteke dnevnika (v bytih)"
     },
     "Log Max File Size [bytes]:": {
@@ -2508,7 +2508,7 @@
       "es": "Registro",
       "pt": "Registando",
       "jp": "ログ作成中",
-      "zh_cn": "Logging",
+      "zh_cn": "日志：",
       "si": "Prijavljanje"
     },
     "Logging:": {
@@ -2528,7 +2528,7 @@
       "es": "Inicio de sesión realizado con éxito.",
       "pt": "Login realizado com sucesso.",
       "jp": "ログイン成功しました。",
-      "zh_cn": "Login performed successfully.",
+      "zh_cn": "登陆成功",
       "si": "Prijava uspešno opravljena."
     },
     "Lower bound for the randomly chosen profit check interval.\nDo not set too low.": {
