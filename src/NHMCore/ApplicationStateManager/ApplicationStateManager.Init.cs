@@ -86,7 +86,7 @@ namespace NHMCore
                     var msg = detectionStepMessage(step);
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
-                await DeviceDetection.DetectDevices(devDetectionProgress);
+                await DeviceDetection.DetectDevices(MiscSettings.Instance.DetectIntegratedDevices, devDetectionProgress);
                 if(DeviceDetection.DetectionResult.CUDADevices.Any(dev => dev.IsLHR) && !Helpers.IsElevated && CUDADevice.INSTALLED_NVIDIA_DRIVERS < new Version(522, 25))
                 {
                     AvailableNotifications.CreateLHRPresentAdminRunRequired();

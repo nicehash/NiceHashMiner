@@ -16,29 +16,27 @@ namespace NHM.Common
     public static class PluginsListCacheManager
     {
         //private static DateTime lastVersion = DateTime.MinValue;
-        readonly static string dateFilePath = Paths.AppRootPath("cachedplugindate.json");
-        readonly static string pluginFilePath = Paths.AppRootPath("cachedplugins.json");
+        readonly static string dateFilePath = Paths.AppRootPath("cachedplugindate");
+        readonly static string pluginFilePath = Paths.AppRootPath("cachedplugins");
         private static readonly string format = "d MMM yyyy HH:mm 'GMT'";
         private static readonly string _TAG = "PluginsListCacheManager";
 
-        private static DateTime LastVersion
+        private static DateTime GetLastVersion(string version)
         {
-            get
-            {
-                return GetCachedDateTime();
-            }
-            set
-            {
-                WriteNewCachedDateTime(value);
-            }
+            return GetCachedDateTime(version);
+        }
+        private static void SetLastVersion(DateTime dt, string version)
+        {
+            WriteNewCachedDateTime(dt, version);
         }
 
-        public static DateTime GetCachedDateTime()
+        public static DateTime GetCachedDateTime(string version)
         {
-            if (!File.Exists(dateFilePath)) return DateTime.MinValue;
+            string filePath = $"{dateFilePath}_v{version}.json";
+            if (!File.Exists(filePath)) return DateTime.MinValue;
             try
             {
-                string fileContent = File.ReadAllText(dateFilePath);
+                string fileContent = File.ReadAllText(filePath);
                 DateTime deserializedDateTime = JsonSerializer.Deserialize<DateTime>(fileContent);
                 return deserializedDateTime;
             }
@@ -49,12 +47,13 @@ namespace NHM.Common
             }
         }
 
-        public static void WriteNewCachedDateTime(DateTime newCachedDateTime)
+        public static void WriteNewCachedDateTime(DateTime newCachedDateTime, string version)
         {
+            string filePath = $"{dateFilePath}_v{version}.json";
             try
             {
                 string jsonString = JsonSerializer.Serialize(newCachedDateTime);
-                File.WriteAllText(dateFilePath, jsonString);
+                File.WriteAllText(filePath, jsonString);
             }
             catch (Exception ex)
             {
@@ -62,14 +61,14 @@ namespace NHM.Common
             }
         }
 
-        public static async Task<bool> CheckIfShouldUpdateAndUpdateLatestDate(string url)
+        public static async Task<bool> CheckIfShouldUpdateAndUpdateLatestDate(string url, int version)
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("User-Agent", "PluginsListCacheManager");
-                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, url);
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, $"{url}?v={version}");
                     HttpResponseMessage response = await client.SendAsync(request);
                     if (response.StatusCode != HttpStatusCode.OK) return true;
                     if (response.Content.Headers.NonValidated.Contains("Last-Modified"))
@@ -77,8 +76,14 @@ namespace NHM.Common
                         var lastModifiedStr = response.Content.Headers.NonValidated.GetValueOrDefault("Last-Modified");
                         if (DateTime.TryParseExact(lastModifiedStr.ToString(), format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime result))
                         {
-                            if (LastVersion == result) return false;
-                            LastVersion = result;
+                            var lastVer = GetLastVersion(version.ToString());
+                            if (lastVer == result)
+                            {
+                                Logger.Debug("PluginsListCacheManager", $"Plugin update loop: versions {version} - no update needed - {result}");
+                                return false;
+                            }
+                            Logger.Debug("PluginsListCacheManager", $"Plugin update loop: versions {version} - WILL UPDATE - {lastVer}/{result}");
+                            SetLastVersion(result, version.ToString());
                             return true;
                         }
                     }             
@@ -91,11 +96,12 @@ namespace NHM.Common
             return true;
         }
 
-        public static bool WritePluginCache(string plugins)
+        public static bool WritePluginCache(int version, string plugins)
         {
+            string filePath = $"{pluginFilePath}_v{version}.json";
             try
             {
-                File.WriteAllText(pluginFilePath, plugins);
+                File.WriteAllText(filePath, plugins);
                 return true;
             }
             catch (Exception ex)
@@ -105,12 +111,13 @@ namespace NHM.Common
             return false;
         }
 
-        public static string ReadPluginCache()
+        public static string ReadPluginCache(int version)
         {
+            string filePath = $"{pluginFilePath}_v{version}.json";
             try
             {
-                if (!File.Exists(pluginFilePath)) return string.Empty;
-                return File.ReadAllText(pluginFilePath);
+                if (!File.Exists(filePath)) return string.Empty;
+                return File.ReadAllText(filePath);
             }
             catch (Exception ex)
             {

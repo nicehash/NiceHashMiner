@@ -699,7 +699,7 @@ namespace NHMCore.Mining.Plugins
         {
             using var client = new NoKeepAliveHttpClient();
             string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
-            PluginsListCacheManager.WritePluginCache(s);
+            PluginsListCacheManager.WritePluginCache(version, s);
             return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -712,14 +712,16 @@ namespace NHMCore.Mining.Plugins
         {
             async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
-                var shouldUpdate = await PluginsListCacheManager.CheckIfShouldUpdateAndUpdateLatestDate(Links.PluginsJsonApiUrl);
+                var shouldUpdate = await PluginsListCacheManager.CheckIfShouldUpdateAndUpdateLatestDate(Links.PluginsJsonApiUrl, version);
+                Logger.Info("MinerPluginsManager", $"Should update plugins ({version}) {shouldUpdate}");
                 if (shouldUpdate)
                 {
                     return await FetchPluginsOnline(version);
                 }
-                var readPluginList = PluginsListCacheManager.ReadPluginCache();
+                var readPluginList = PluginsListCacheManager.ReadPluginCache(version);
                 if(readPluginList == string.Empty)
                 {
+                    Logger.Warn("MinerPluginsManager", $"ReadPluginList was empty");
                     return await FetchPluginsOnline(version);
                 }
                 try

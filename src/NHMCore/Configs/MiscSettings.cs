@@ -124,5 +124,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(EnableGPUManagement));
             }
         }
+        private bool _detectIntegratedDevs = true;
+        public bool DetectIntegratedDevices
+        {
+            get => _detectIntegratedDevs;
+            set
+            {
+                _detectIntegratedDevs = value;
+                OnPropertyChanged(nameof(DetectIntegratedDevices));
+            }
+        }
     }
 }
