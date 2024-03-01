@@ -11,6 +11,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
     <UserControl.Resources>
         <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
+        <local:PreviewContentToVisibilityConverterNot x:Key="PreviewContentToVisibilityConverterNot"/>
         <Style TargetType="Grid" x:Key="previewGrid">
             <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
             <Setter Property="Margin" Value="0,0,0,15" />
@@ -226,12 +227,16 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Margin="40,0,40,0">
-                <Grid Grid.Row="0" Style="{StaticResource previewGrid}"
-                      Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+            <Grid Grid.Row="0" Margin="40,0,40,0" Style="{StaticResource previewGrid}">
+                <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}" Background="#bfffc9">
                     <StackPanel Style="{StaticResource previewStackPanel}">
                         <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
                         <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding CombinedParams}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverterNot}}" Background="#ffbfbf">
+                    <StackPanel Style="{StaticResource previewStackPanel}">
+                        <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview not available, incorrect or empty parameters for this level."/>
                     </StackPanel>
                 </Grid>
             </Grid>
