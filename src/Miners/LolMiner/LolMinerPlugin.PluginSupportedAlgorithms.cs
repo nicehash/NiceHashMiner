@@ -42,7 +42,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.NexaPow),
                         new SAS(AlgorithmType.IronFish) { Enabled = false },
-                        new SAS(AlgorithmType.KarlsenHash) { Enabled = false },
+                        new SAS(AlgorithmType.KarlsenHash) { Enabled = true },
                     }
                 },
                 {
@@ -60,7 +60,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.NexaPow),
                         new SAS(AlgorithmType.IronFish) { Enabled = false },
-                        new SAS(AlgorithmType.KarlsenHash) { Enabled = false },
+                        new SAS(AlgorithmType.KarlsenHash) { Enabled = true },
                     }
                 },
                 {
