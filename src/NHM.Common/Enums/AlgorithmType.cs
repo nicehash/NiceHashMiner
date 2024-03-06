@@ -141,7 +141,9 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         NexaPow = 63,
         //[Obsolete("UNUSED Algorithm")]
-        IronFish = 64
+        IronFish = 64,
+        //[Obsolete("UNUSED Algorithm")]
+        KarlsenHash = 65
         #endregion // NiceHashAPI
     }
 

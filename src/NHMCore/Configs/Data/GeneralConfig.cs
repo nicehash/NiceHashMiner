@@ -105,6 +105,11 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.EnableGPUManagement;
             set => MiscSettings.Instance.EnableGPUManagement = value;
         }
+        public bool DetectIntegratedDevices
+        {
+            get => MiscSettings.Instance.DetectIntegratedDevices;
+            set => MiscSettings.Instance.DetectIntegratedDevices = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings

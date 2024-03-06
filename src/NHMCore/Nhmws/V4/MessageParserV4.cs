@@ -18,6 +18,7 @@ using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -175,8 +176,6 @@ namespace NHMCore.Nhmws.V4
                     if ((od.type == DeviceDynamicProperties.Temperature ||
                         od.type == DeviceDynamicProperties.HotspotTemp ||
                         od.type == DeviceDynamicProperties.VramTemp ||
-                        od.type == DeviceDynamicProperties.CoreClock ||
-                        od.type == DeviceDynamicProperties.MemClock ||
                         od.type == DeviceDynamicProperties.PowerUsage ||
                         od.type == DeviceDynamicProperties.TDP ||
                         od.type == DeviceDynamicProperties.TDPWatts ||
@@ -191,7 +190,9 @@ namespace NHMCore.Nhmws.V4
                     }
                     if ((od.type == DeviceDynamicProperties.Load ||
                         od.type == DeviceDynamicProperties.FanSpeedRPM ||
-                        od.type == DeviceDynamicProperties.FanSpeedPercentage) &&
+                        od.type == DeviceDynamicProperties.FanSpeedPercentage ||
+                        od.type == DeviceDynamicProperties.CoreClock ||
+                        od.type == DeviceDynamicProperties.MemClock) &&
                         Int32.TryParse(od.value, out var less) && less < 0)
                     {
                         if (IgnoredValues.TryGetValue(d.B64Uuid, out var list) &&
@@ -317,6 +318,39 @@ namespace NHMCore.Nhmws.V4
             }
             return result;
         }
+
+        private static readonly string _uuid_seed_multiple_instance = Paths.AppRootPath("_uuid_seed.json");
+        private static string GetUniqueAppendixIfNeeded()
+        {
+            string multipleInstanceAppendix()
+            {
+                return $"{Math.Round((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds)}";
+            }
+            if (MiscSettings.Instance.AllowMultipleInstances)
+            {
+                if (!File.Exists(_uuid_seed_multiple_instance))
+                {
+                    try
+                    {
+                        using (StreamWriter writer = new StreamWriter(_uuid_seed_multiple_instance))
+                        {
+                            var uuidAppendix = $"{multipleInstanceAppendix()}+{Random.Shared.NextInt64(100)}";
+                            writer.Write(uuidAppendix);
+                        }
+                    }
+                    catch (Exception ex) { Logger.Error("ApplicationStateManager", ex.Message); }
+                }
+                try
+                {
+                    string fileContents = File.ReadAllText(_uuid_seed_multiple_instance);
+                    return $"+{fileContents}";
+                }
+                catch (Exception ex) { Logger.Error("ApplicationStateManager", ex.Message); }
+                return $"+{multipleInstanceAppendix()}+{Random.Shared.NextInt64(100)}";
+            }
+            return string.Empty;
+        }
+
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
             var sorted = SortedDevices(devices);
@@ -342,7 +376,7 @@ namespace NHMCore.Nhmws.V4
             {
                 Btc = btc,
                 Worker = worker,
-                RigID = rigID,
+                RigID = rigID + GetUniqueAppendixIfNeeded(),
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
                 OptionalMutableProperties = GetRigOptionalMutableValues(true).properties,
                 OptionalDynamicProperties = GetRigOptionalDynamicValues().properties,
@@ -785,6 +819,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static string GetLimitsForDevice(ComputeDevice d)
         {
+            //todo granulate
             ComplexLimit limit = new ComplexLimit();
             if (d.DeviceMonitor is ITDP && d.DeviceMonitor is ITDPLimits tdpLim)
             {

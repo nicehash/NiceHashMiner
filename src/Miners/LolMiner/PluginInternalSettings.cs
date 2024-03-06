@@ -62,6 +62,10 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.IronFish}",
                     $"--algo IRONFISH --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
+                    $"--algo KARLSEN --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -109,6 +113,10 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.IronFish}",
                     $"--algo IRONFISH --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
+                    $"--algo KARLSEN --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 }
             }
         };

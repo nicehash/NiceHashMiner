@@ -76,7 +76,7 @@ namespace NHMCore
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-                var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
+                var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs(MiscSettings.Instance.DetectIntegratedDevices);
                 if (!hasMissingGPUs.isMissing) return;
                 foreach(var missingItem in hasMissingGPUs.uuids)
                 {

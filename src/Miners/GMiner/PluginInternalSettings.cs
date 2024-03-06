@@ -68,6 +68,10 @@ namespace MP.GMiner
                 {
                     $"{AlgorithmType.IronFish}",
                     $"-a ironfish -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
+                    $"-a karlsen -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -118,6 +122,10 @@ namespace MP.GMiner
                 },
                 {
                     $"{AlgorithmType.IronFish}",
+                    $"-a ironfish -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
                     $"-a ironfish -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
             }

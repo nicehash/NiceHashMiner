@@ -189,9 +189,9 @@ namespace NHM.DeviceDetection
             Logger.Info(Tag, stringBuilder.ToString());
         }
 
-        private static async Task DetectAMDDevices()
+        private static async Task DetectAMDDevices(bool detectIntegrated)
         {
-            var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
+            var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList(), detectIntegrated);
             if (amdDevices == null || amdDevices.Count == 0)
             {
                 Logger.Info(Tag, "DetectAMDDevices ZERO Found.");
@@ -213,6 +213,7 @@ namespace NHM.DeviceDetection
                 stringBuilder.AppendLine($"\t\tInfSection: {amdDev.InfSection}");
                 stringBuilder.AppendLine($"\t\tMEMORY: {amdDev.GpuRam}");
                 stringBuilder.AppendLine($"\t\tOpenCLPlatformID: {amdDev.OpenCLPlatformID}");
+                stringBuilder.AppendLine($"\t\tIsIntegrated: {amdDev.IsIntegrated}");
             }
             Logger.Info(Tag, stringBuilder.ToString());
         }
@@ -245,7 +246,7 @@ namespace NHM.DeviceDetection
             DetectionResult.FAKEDevices = Settings.Devices;
         }
 
-        public static async Task DetectDevices(IProgress<DeviceDetectionStep> progress)
+        public static async Task DetectDevices(bool detectIntegrated, IProgress<DeviceDetectionStep> progress)
         {
             if (_initCalled) return;
             _initCalled = true;
@@ -256,7 +257,7 @@ namespace NHM.DeviceDetection
             progress?.Report(DeviceDetectionStep.NVIDIA_CUDA);
             if (!Settings.FakeDevices) await DetectCUDADevices();
             progress?.Report(DeviceDetectionStep.AMD_OpenCL);
-            if (!Settings.FakeDevices) await DetectAMDDevices();
+            if (!Settings.FakeDevices) await DetectAMDDevices(detectIntegrated);
             progress?.Report(DeviceDetectionStep.INTEL_GPU);
             if (!Settings.FakeDevices) await DetectIntelGPUs();
             progress?.Report(DeviceDetectionStep.FAKE);
@@ -317,7 +318,7 @@ namespace NHM.DeviceDetection
         }
 
         // We check only missing from inital detection. Case like device poping back is not covered (ultra rare case)
-        public static async Task<(bool isMissing, List<string> uuids)> CheckIfMissingGPUs()
+        public static async Task<(bool isMissing, List<string> uuids)> CheckIfMissingGPUs(bool detectIntegrated)
         {
             async Task<(bool isMissing, List<string> uuids)> anyMissingCUDA_Devices()
             {
@@ -348,7 +349,7 @@ namespace NHM.DeviceDetection
                 try
                 {
                     if (!DetectionResult.HasAMDDevices) return (false, new List<string>());
-                    var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
+                    var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList(), detectIntegrated);
                     var amdDevicesUUIDs = amdDevices
                         .Select(dev => dev.UUID)
                         .ToArray();

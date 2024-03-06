@@ -43,7 +43,7 @@ namespace NanoMiner
         public override string Name => "NanoMiner";
 
 
-        public override Version Version => new Version(19, 6);
+        public override Version Version => new Version(23, 0);
 
         public override string Author => "info@nicehash.com";
 
