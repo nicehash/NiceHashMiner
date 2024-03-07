@@ -8,5 +8,6 @@ namespace NHM.DeviceDetection.Models.AMDBusIDVersionResult
         public int BUS_ID { get; set; } = -1;
         public int ADLRetCode { get; set; } = -1;
         public int FunctionCall { get; set; } = -1;
+        public bool IsIntegrated { get; set; } = false;
     }
 }

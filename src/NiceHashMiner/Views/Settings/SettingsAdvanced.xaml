@@ -10,6 +10,9 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <local:BoolInvert x:Key="BoolInvert" />
+    </UserControl.Resources>
     <StackPanel>
         <!-- ADVANCED -->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="advancedWP">
@@ -66,25 +69,25 @@
                                         Enabled="{Binding GlobalDeviceSettings.RestartMachineOnLostGPU}"
                                         Label="Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)"
                                         Description="{StaticResource runOnGPUsLost}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.PauseMiningWhenGamingMode}"
-                                        Label="Pause mining when Steam game is started"
-                                        Description="{StaticResource steamGamingMode}"/>
-            <ComboBox x:Name="cBoxGPUs" Style="{StaticResource smallComboBoxSteam}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding MiningSettings.GPUs}" SelectedIndex="{Binding MiningSettings.DeviceIndex, Mode=TwoWay}" Margin="0,0,24,0" SelectionChanged="GPUComboBox_SelectionChanged" HorizontalAlignment="Left">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding FullName}" Width="300" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
                                         Label="Resolve NiceHash domains to IPs via Cloudflare"
                                         Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.EnableSSLMining}"
                                         Label="Enable SSL Mining"
                                         Description="This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented."/>
-            
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.SendEvents}"
+                                        Label="Send events to rig manager"
+                                        Description="If enabled, NHM will send events to rig manager."/>
+            <local:SettingsCheckBoxItem 
+                                        IsEnabled="{Binding MiningState.IsCurrentlyMining, Converter={StaticResource BoolInvert}}"
+                                        Enabled="{Binding MiscSettings.AutoResetOC}"
+                                        Label="Enable Automatic OC reset (leave this on if you dont know what it is)"
+                                        Description="If you encounter problems (TDP spikes) with stopping or turning off NHM, turn this off, otherwise do not touch it"/>
+            <local:SettingsCheckBoxItem 
+                                        IsEnabled="{Binding MiningState.IsCurrentlyMining, Converter={StaticResource BoolInvert}}"
+                                        Enabled="{Binding MiscSettings.EnableGPUManagement}"
+                                        Label="Enable OC and FAN tweaking for GPUs (Disabling may harm your rig)"
+                                        Description="This option will enable/disable automatic (as well as manual) settings for fans and overclocking"/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -92,9 +95,6 @@
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDeviceStatusMonitoring}"
                                         Label="Disable Device Status Monitoring"
                                         Description="{StaticResource disableDeviceStatus}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDevicePowerModeSettings}"
-                                        Label="Disable Device Power Mode Settings"
-                                        Description="{StaticResource disableDevicePowerMode}"/>
         </WrapPanel>
         <!--Logging-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -170,7 +170,7 @@
         <!-- NVIDIA/CUDA -->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda"
                    Visibility="{Binding GPUProfileManager.SystemContainsSupportedDevices, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}">
-            <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" Visibility="{Binding GPUProfileManager.SystemContainsSupportedDevices, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}" />
             <WrapPanel Orientation="Horizontal">
                 <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseOptimizationProfiles}"
                                         IsEnabled="{Binding GPUProfileManager.IsSystemElevated}"

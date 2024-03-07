@@ -7,7 +7,6 @@ namespace NBMiner
 {
     public partial class NBMinerPlugin
     {
-        const ulong KAWPOW_RamLimit = (2UL << 30) + (2UL << 29) + (2UL << 28);
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // TODO fees are not just 2%
@@ -25,10 +24,10 @@ namespace NBMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
-                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = (4UL << 30), Enabled = false },
                         new SAS(AlgorithmType.BeamV3) { Enabled = false },
-                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
-                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29), Enabled = false},
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false },
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false},
 
@@ -38,11 +37,11 @@ namespace NBMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW) {NonDefaultRAMLimit = KAWPOW_RamLimit },
+                        new SAS(AlgorithmType.KAWPOW) {NonDefaultRAMLimit = (4UL << 30), Enabled = false },
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
-                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false },
-                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29), Enabled = false},
                     }
                 }
             }

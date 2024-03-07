@@ -25,11 +25,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.65",
-                ExePath = new List<string> { "1.65", "lolMiner.exe" },
+                BinVersion = "1.84",
+                ExePath = new List<string> { "1.84", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.65/lolMiner_v1.65_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.84/lolMiner_v1.84_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(19, 7);
+        public override Version Version => new Version(23, 0);
 
         public override string Author => "info@nicehash.com";
 
@@ -62,7 +62,7 @@ namespace LolMiner
             }
 
             var gpus = devices
-                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported) || IsSupportedINTELDevice(dev))
                 .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID)
@@ -86,6 +86,12 @@ namespace LolMiner
         {
             var isSupported = dev is AMDDevice;
             return isSupported;
+        }
+
+        private static bool IsSupportedINTELDevice(BaseDevice dev)
+        {
+            var idSupported = dev is IntelDevice;
+            return idSupported;
         }
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev, bool isDriverSupported)

@@ -55,6 +55,8 @@ namespace NHMCore.Mining.Grouping
 
         public AlgorithmContainer GetMostProfitableAlgorithmContainer()
         {
+            var forcedContainer = Algorithms.Where(a => a.IsTesting)?.FirstOrDefault();
+            if (forcedContainer != null) return forcedContainer;
             return Algorithms.FirstOrDefault(a => a.AlgorithmStringID == MostProfitableAlgorithmStringID);
         }
 

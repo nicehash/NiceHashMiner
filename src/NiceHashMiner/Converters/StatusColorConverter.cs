@@ -14,7 +14,12 @@ namespace NiceHashMiner.Converters
         private static object ColorForDeviceState(DeviceState state) => state switch
         {
             DeviceState.Mining => Application.Current.FindResource("NastyGreenBrush"),
+#if NHMWS4
             DeviceState.Benchmarking or DeviceState.Pending => Application.Current.FindResource("PrimaryColorBrush"),
+            DeviceState.Testing => Application.Current.FindResource("WarningColorBrush"),
+#else
+            DeviceState.Benchmarking or DeviceState.Pending or DeviceState.Testing => Application.Current.FindResource("PrimaryColorBrush"),
+#endif
             DeviceState.Disabled => Application.Current.FindResource("Gray1ColorBrush"),
             DeviceState.Error => Application.Current.FindResource("RedDangerColorBrush"),
             DeviceState.Stopped => Application.Current.FindResource("TextColorBrush"),

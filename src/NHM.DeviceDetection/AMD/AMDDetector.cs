@@ -46,7 +46,7 @@ namespace NHM.DeviceDetection.AMD
                 return null;
             }
         }
-        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
+        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers, bool detectIntegrated)
         {
             Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
             var (rawOutput, parsed) = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
@@ -79,6 +79,7 @@ namespace NHM.DeviceDetection.AMD
             }
 
             Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
+            if(detectIntegrated) return result.Select(p => p.dev).Where(d => !d.IsIntegrated).ToList();
             return result.Select(p => p.dev).ToList();
         }
 
@@ -128,10 +129,12 @@ namespace NHM.DeviceDetection.AMD
                         InfSection = infSection,
                         OpenCLPlatformID = platformNum,
                         RawDeviceData = JsonConvert.SerializeObject(oclDev),
+                        IsIntegrated = false
                     };
                     var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
                     if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
                     {
+                        amdDevice.IsIntegrated = thisDeviceExtraADLResult.IsIntegrated;
                         amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
                         amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
                         amdDevice.RawDriverVersion = thisDeviceExtraADLResult.AdrenalinVersion;

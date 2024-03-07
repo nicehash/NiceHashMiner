@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using XMRig;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -58,15 +57,11 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_LolMiner_PLUGIN
                 new LolMinerPlugin(),
 #endif
-#if INTEGRATE_XMRig_PLUGIN
-                new XMRigPlugin(),
-#endif
 
 #if INTEGRATE_ALL_PLUGINS
                 new NBMinerPlugin(),
                 new NanoMinerPlugin(),
                 new LolMinerPlugin(),
-                new XMRigPlugin(),
 #endif
 
             };
@@ -599,6 +594,9 @@ namespace NHMCore.Mining.Plugins
             finally
             {
                 PluginInstaller.RemovedPluginStatus(pluginUUID, true);
+#if NHMWS4
+                ApplicationStateManager.ReSendLoginMessage();
+#endif
                 await Task.CompletedTask;
             }
         }
@@ -697,18 +695,50 @@ namespace NHMCore.Mining.Plugins
             return (uuid,localPluginInfo);
         }
 
+        private static async Task<List<PluginPackageInfo>?> FetchPluginsOnline(int version)
+        {
+            using var client = new NoKeepAliveHttpClient();
+            string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+            PluginsListCacheManager.WritePluginCache(version, s);
+            return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                Culture = CultureInfo.InvariantCulture
+            });
+        } 
+
         private static async Task<bool> GetOnlineMinerPlugins()
         {
             async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
-                using var client = new NoKeepAliveHttpClient();
-                string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
-                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                var shouldUpdate = await PluginsListCacheManager.CheckIfShouldUpdateAndUpdateLatestDate(Links.PluginsJsonApiUrl, version);
+                Logger.Info("MinerPluginsManager", $"Should update plugins ({version}) {shouldUpdate}");
+                if (shouldUpdate)
                 {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    Culture = CultureInfo.InvariantCulture
-                });
+                    return await FetchPluginsOnline(version);
+                }
+                var readPluginList = PluginsListCacheManager.ReadPluginCache(version);
+                if(readPluginList == string.Empty)
+                {
+                    Logger.Warn("MinerPluginsManager", $"ReadPluginList was empty");
+                    return await FetchPluginsOnline(version);
+                }
+                try
+                {
+                    var deserialized = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(readPluginList, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
+                    return deserialized;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("MinerPluginsManager", $"Error occured while deserializing cached plugins: {ex.Message}");
+                    return await FetchPluginsOnline(version);
+                }
             }
             try
             {
@@ -864,6 +894,9 @@ namespace NHMCore.Mining.Plugins
 
 
                 AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
+#if NHMWS4
+                ApplicationStateManager.ReSendLoginMessage();
+#endif
             }
         }
 

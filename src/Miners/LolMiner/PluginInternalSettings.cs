@@ -24,10 +24,6 @@ namespace LolMiner
                     $"--coin AUTO144_5 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
                 {
-                    $"{AlgorithmType.GrinCuckatoo31}",
-                    $"--algo C31 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                },
-                {
                     $"{AlgorithmType.GrinCuckatoo32}",
                     $"--algo C32 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
@@ -59,17 +55,24 @@ namespace LolMiner
                     $"{AlgorithmType.CuckooCycle}",
                     $"--algo C29AE --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
-
+                {
+                    $"{AlgorithmType.NexaPow}",
+                    $"--algo NEXA --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.IronFish}",
+                    $"--algo IRONFISH --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
+                    $"--algo KARLSEN --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
             {
                 {
                     $"{AlgorithmType.ZHash}",
                     $"--coin AUTO144_5 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                },
-                {
-                    $"{AlgorithmType.GrinCuckatoo31}",
-                    $"--algo C31 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.GrinCuckatoo32}",
@@ -103,6 +106,18 @@ namespace LolMiner
                     $"{AlgorithmType.CuckooCycle}",
                     $"--algo C29AE --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
+                {
+                    $"{AlgorithmType.NexaPow}",
+                    $"--algo NEXA --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.IronFish}",
+                    $"--algo IRONFISH --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KarlsenHash}",
+                    $"--algo KARLSEN --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                }
             }
         };
 

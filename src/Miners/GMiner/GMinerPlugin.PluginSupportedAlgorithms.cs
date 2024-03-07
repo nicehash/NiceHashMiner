@@ -11,7 +11,6 @@ namespace MP.GMiner
 {
     public partial class GMinerPlugin
     {
-        const ulong KAWPOW_RamLimit = (2UL << 30) + (2UL << 29) + (2UL << 28);
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // TODO fees are not just 2%
@@ -27,30 +26,36 @@ namespace MP.GMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
-                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
+                        new SAS(AlgorithmType.DaggerHashimoto){Enabled = false},
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit =  (4UL << 30)  },
                         new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.KHeavyHash) { NonDefaultRAMLimit = (2UL << 29) },
-                        new SAS(AlgorithmType.CuckooCycle),
-                        new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash)
+                        new SAS(AlgorithmType.KHeavyHash) { NonDefaultRAMLimit = (2UL << 29), Enabled = false },
+                        new SAS(AlgorithmType.CuckooCycle){Enabled = false},
+                        new SAS(AlgorithmType.ZelHash){Enabled = false},
+                        new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
+                        new SAS(AlgorithmType.ZHash){Enabled = false},
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
+                        new SAS(AlgorithmType.IronFish) {Enabled = false},
+                        new SAS(AlgorithmType.KarlsenHash) {Enabled = false,  NonDefaultRAMLimit = (2UL << 29)},
                     }
                 },
                 {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
-                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
-                        //new SAS(AlgorithmType.Autolykos),
-                        //new SAS(AlgorithmType.KHeavyHash),
-                        new SAS(AlgorithmType.CuckooCycle),
-                        new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash)
+                        new SAS(AlgorithmType.DaggerHashimoto){Enabled = false},
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit =  (4UL << 30)  },
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.KHeavyHash) {Enabled = false},
+                        new SAS(AlgorithmType.CuckooCycle){Enabled = false},
+                        new SAS(AlgorithmType.ZelHash){Enabled = false},
+                        new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
+                        new SAS(AlgorithmType.ZHash){Enabled = false},
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = (5UL << 30) + (4UL << 29)},
+                        new SAS(AlgorithmType.IronFish) {Enabled = false},
+                        //new SAS(AlgorithmType.KarlsenHash) {Enabled = false,  NonDefaultRAMLimit = (2UL << 29)},
                     }
                 }
             }

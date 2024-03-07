@@ -6,6 +6,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Nhmws.V4;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -76,15 +77,24 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 foreach (var algo in Dev.AlgorithmSettings)
                 {
-                    algo.Enabled = value;
+                    //algo.Enabled = value;
+                    algo.SetEnabled(value);
                 }
                 OnPropertyChanged();
+                ConfigManager.CommitBenchmarksForDevice(Dev);
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
             }
         }
 
+#if NHMWS4
+        public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining || Dev.State == DeviceState.Testing);
+        public bool CanStopBenchmark => Dev.Enabled && (Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Testing);
+        public bool CanStopMining => Dev.Enabled && (Dev.State == DeviceState.Mining || Dev.State == DeviceState.Testing);//problem? if testing running  from bench or from mining
+#else
         public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
         public bool CanStopBenchmark => Dev.Enabled && Dev.State == DeviceState.Benchmarking;
         public bool CanStopMining => Dev.Enabled && Dev.State == DeviceState.Mining;
+#endif
         public bool CanCopyFromOtherDevices => AvailableDevices.Devices.Count(dev => dev.DeviceType == Dev.DeviceType) > 1 && CanClearAllSpeeds;
 
 
@@ -92,7 +102,11 @@ namespace NiceHashMiner.ViewModels.Models
 
         // TODO Pending state and error states
         public bool CanStart => Dev.Enabled && Dev.State == DeviceState.Stopped;
+#if NHMWS4
+        public bool CanStop => Dev.Enabled && (Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining || Dev.State == DeviceState.Testing);
+#else
         public bool CanStop => Dev.Enabled && (Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
+#endif
 
         public string AlgoOptions
         {
@@ -132,7 +146,11 @@ namespace NiceHashMiner.ViewModels.Models
                 {
                     buttonLabel = "Start";
                 }
+#if NHMWS4
+                else if (Dev.State == DeviceState.Mining || Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Testing)
+#else
                 else if (Dev.State == DeviceState.Mining || Dev.State == DeviceState.Benchmarking)
+#endif
                 {
                     buttonLabel = "Stop";
                 }
@@ -256,12 +274,16 @@ namespace NiceHashMiner.ViewModels.Models
         public float Temp { get; private set; } = -1;
 
         public int _fanSpeed = -1;
+
+        private bool _isRPM = false;
+
         public string FanSpeed
         {
             get
             {
                 if (_fanSpeed < 0) return MISSING_INFO;
-                return $"{_fanSpeed}%";
+                if(!_isRPM) return $"{_fanSpeed}%";
+                return $"{_fanSpeed}RPM";
             }
         }
 
@@ -269,7 +291,8 @@ namespace NiceHashMiner.ViewModels.Models
         {
             Load = Dev.Load;
             Temp = Dev.Temp;
-            _fanSpeed = Dev.FanSpeed;
+            _isRPM = -1 == Dev.FanSpeed;
+            _fanSpeed = _isRPM ? Dev.FanSpeedRPM : Dev.FanSpeed;
             OnPropertyChanged(nameof(Load));
             OnPropertyChanged(nameof(Temp));
             OnPropertyChanged(nameof(FanSpeed));
@@ -301,8 +324,11 @@ namespace NiceHashMiner.ViewModels.Models
         {
             foreach (var a in Dev.AlgorithmSettings)
             {
-                a.Enabled = a.HasBenchmark;
+                a.SetEnabled(a.HasBenchmark);
             }
+            OnPropertyChanged();
+            ConfigManager.CommitBenchmarksForDevice(Dev);
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
         }
 
         #region AlgorithmSettingsCollection SORTING
@@ -374,7 +400,7 @@ namespace NiceHashMiner.ViewModels.Models
         }
 
 
-        #endregion AlgorithmSettingsCollection SORTING
+#endregion AlgorithmSettingsCollection SORTING
 
         public static implicit operator DeviceData(ComputeDevice dev)
         {

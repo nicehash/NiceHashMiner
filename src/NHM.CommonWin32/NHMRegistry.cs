@@ -1,12 +1,15 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
+using NHM.Common.Enums;
 using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace NHM.CommonWin32
 {
     public static class NHMRegistry
     {
         private static string NHM_SUBKEY => @"SOFTWARE\" + APP_GUID.GUID;
+        private static string QM_SUBKEY => @"SOFTWARE\NiceHash QuickMiner";
         private static bool EnsureNHMSubKeyCalled = false;
         private static void EnsureNHMSubKey()
         {
@@ -95,8 +98,15 @@ namespace NHM.CommonWin32
         {
             try
             {
-                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\NiceHash QuickMiner", true);
+                if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return;
+                var key = Registry.LocalMachine.OpenSubKey(QM_SUBKEY, true);
+                if (key == null)
+                {
+                    Registry.LocalMachine.CreateSubKey(QM_SUBKEY);
+                    key = Registry.LocalMachine.OpenSubKey(QM_SUBKEY, true);
+                }
                 key.SetValue("MiningAddress", btc);
+                key.Close();
             }
             catch (Exception ex)
             {

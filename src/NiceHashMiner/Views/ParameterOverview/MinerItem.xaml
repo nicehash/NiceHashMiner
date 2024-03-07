@@ -11,6 +11,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
     <UserControl.Resources>
         <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
+        <local:PreviewContentToVisibilityConverterNot x:Key="PreviewContentToVisibilityConverterNot"/>
         <Style TargetType="Grid" x:Key="previewGrid">
             <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
             <Setter Property="Margin" Value="0,0,0,15" />
@@ -159,8 +160,35 @@
                     </Style>
                 </Border.Style>
             </Border>
-            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
-                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch" >
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}"
+                          HorizontalContentAlignment="Stretch"
+                          Visibility="{Binding Name, Converter={StaticResource IsPluginExcavatorToVisibilityConverterNot}}">
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch"  >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Visibility="{Binding HasAnyContentSet, Converter={StaticResource NulBoolToVisibilityConverter}}" 
+                                   Style="{StaticResource GreenCircle}" 
+                                   FontSize="5"
+                                   Margin="5,0,5,0"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1">
+                        <TextBlock>
+                            You can fine-tune Excavator from the command file
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </ToggleButton>
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" 
+                          x:Name="AlgorithmsGridToggleButtonHidden" 
+                          Click="DropDownAlgorithms_Button_Click"  
+                          HorizontalContentAlignment="Stretch"
+                          Visibility="{Binding Name, Converter={StaticResource IsPluginExcavatorToVisibilityConverter}}">
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch"  >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="*" />
@@ -181,11 +209,11 @@
                         <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding SingleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="SingleParameterInput"
                                  TextChanged="SingleParameterInput_TextChanged"
                                  LostFocus="SingleParameterInput_LostFocus"
-                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                 IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                         <TextBox Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding DoubleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="DualParameterInput" 
                                  TextChanged="DualParameterInput_TextChanged" 
                                  LostFocus="DualParameterInput_LostFocus"
-                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                 IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
@@ -199,12 +227,16 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Margin="40,0,40,0">
-                <Grid Grid.Row="0" Style="{StaticResource previewGrid}"
-                      Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+            <Grid Grid.Row="0" Margin="40,0,40,0" Style="{StaticResource previewGrid}">
+                <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}" Background="#bfffc9">
                     <StackPanel Style="{StaticResource previewStackPanel}">
                         <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
                         <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding CombinedParams}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverterNot}}" Background="#ffbfbf">
+                    <StackPanel Style="{StaticResource previewStackPanel}">
+                        <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview not available, incorrect or empty parameters for this level."/>
                     </StackPanel>
                 </Grid>
             </Grid>

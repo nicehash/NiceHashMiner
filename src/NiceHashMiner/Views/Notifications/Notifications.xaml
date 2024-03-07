@@ -18,10 +18,58 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextBlock.LineHeight" Value="18" />
         </Style>
+        <Style TargetType="{x:Type ToggleButton}" x:Key="local.TextBlockToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="Left"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                    <Setter Property="IsChecked" Value="True"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                    <Setter Property="IsChecked" Value="False"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.5" />
+                    <Setter Property="TextAlignment" Value="Right" />
+                </Style>
+            </Style.Resources>
+        </Style>
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto" Margin="40,10,40,40">
         <Grid >
             <Grid.RowDefinitions>
+                <RowDefinition Height="4*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
@@ -33,7 +81,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="Notifications" Margin="12,0,0,0" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                     <Button Grid.Column="1" Style="{StaticResource WindowButtonStyle}" Content="Clear All" Click="ClearAllNotifications"/>
@@ -47,6 +95,27 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+            </Grid>
+            <Grid x:Name="pastEventsGrid" Grid.Row="1" Visibility="Collapsed">
+                <Grid Margin="0, 5, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="1" Margin="10,0,10,10">
+                            <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="2">
+                                <TextBlock x:Name="pastEventsTB" />
+                            </Border>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2">
+                <ToggleButton Grid.Row="2" Click="PastEvents_Click" Style="{StaticResource local.TextBlockToggleButton}" Content="Past events" Margin="10, 0, 10, 3" />
             </Grid>
         </Grid>
     </Grid>

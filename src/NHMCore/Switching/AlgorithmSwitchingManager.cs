@@ -27,7 +27,7 @@ namespace NHMCore.Switching
 
         private int _ticksForStable;
         private int _ticksForUnstable;
-        private double _smaCheckTime = 1;
+        private double _smaCheckTime = 5;
 
         // Simplify accessing config objects
         public static Interval StableRange => SwitchSettings.Instance.SwitchSmaTicksStable;

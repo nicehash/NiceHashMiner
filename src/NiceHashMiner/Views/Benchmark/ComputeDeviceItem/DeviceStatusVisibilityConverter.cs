@@ -12,7 +12,11 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         {
             if (value is DeviceState state)
             {
+#if NHMWS4
+                if (state == DeviceState.Benchmarking || state == DeviceState.Mining || state == DeviceState.Testing)
+#else
                 if (state == DeviceState.Benchmarking || state == DeviceState.Mining)
+#endif
                 {
                     return Visibility.Hidden;
                 }

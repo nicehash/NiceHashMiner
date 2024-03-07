@@ -56,6 +56,7 @@ namespace NHMCore.ApplicationState
                 var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(algorithmContainer.ComputeDevice.Uuid)).Where(pair => pair.Value).Count();
                 _deviceCanStartBenchmarkingStates[algorithmContainer.ComputeDevice.Uuid] = algorithmContainer.ComputeDevice.State == DeviceState.Stopped && anyToBench > 0;
                 OnPropertyChanged(nameof(CanStartBenchmarking));
+                OnPropertyChanged(nameof(StartEnabled));
             }
         }
 
@@ -134,6 +135,19 @@ namespace NHMCore.ApplicationState
                 lock (_lock) return _canStartCount > 0;
             }
         }
+        private bool _startEnabled = true;
+        public bool StartEnabled
+        {
+            get
+            {
+                lock (_lock) return _startEnabled;
+            }
+            set
+            {
+                lock(_lock) _startEnabled = value;
+                OnPropertyChanged(nameof(StartEnabled));
+            }
+        }
 
         public bool CanStartBenchmarking
         {
@@ -171,6 +185,7 @@ namespace NHMCore.ApplicationState
                 var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(algorithmContainer.ComputeDevice.Uuid)).Where(pair => pair.Value).Count();
                 _deviceCanStartBenchmarkingStates[algorithmContainer.ComputeDevice.Uuid] = algorithmContainer.ComputeDevice.State == DeviceState.Stopped && anyToBench > 0;
                 OnPropertyChanged(nameof(CanStartBenchmarking));
+                OnPropertyChanged(nameof(StartEnabled));
             }
         }
 

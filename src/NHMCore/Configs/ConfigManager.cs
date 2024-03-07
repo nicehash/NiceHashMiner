@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,6 @@ namespace NHMCore.Configs
                 LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
                 LogMaxFileSize = LoggingDebugConsoleSettings.Instance.LogMaxFileSize,
                 DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
-                DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
@@ -138,15 +138,25 @@ namespace NHMCore.Configs
             return LoggingDebugConsoleSettings.Instance.DebugConsole != _generalConfigBackup.DebugConsole
                    || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
                    || LoggingDebugConsoleSettings.Instance.LogMaxFileSize != _generalConfigBackup.LogMaxFileSize
-                   || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
+                   || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
         }
 
         public static void GeneralConfigFileCommit()
         {
             ApplicationStateManager.App.Dispatcher.Invoke(() =>
             {
-                InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                var res = InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                if (!res)
+                {
+                    try
+                    {
+                        EventManager.Instance.AddEventGeneralCfg();
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.Error("ConfigManager", ex.Message);
+                    }
+                }
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
             });
         }

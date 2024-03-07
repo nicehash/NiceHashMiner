@@ -46,8 +46,8 @@ namespace NBMiner
 
         public override string Name => "NBMiner";
 
-        public override Version Version => new Version(19, 4);
-        
+        public override Version Version => new Version(23, 0);
+
 
         public override string Author => "info@nicehash.com";
 
@@ -168,7 +168,7 @@ namespace NBMiner
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
 
-    public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
