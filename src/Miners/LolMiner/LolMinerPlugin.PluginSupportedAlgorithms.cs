@@ -41,7 +41,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.NexaPow),
                         new SAS(AlgorithmType.Alephium) { Enabled = false },
                         new SAS(AlgorithmType.FishHash) { Enabled = true },
-                        new SAS(AlgorithmType.PyrinHash) { Enabled = false }
+                        new SAS(AlgorithmType.PyrinHash) { Enabled = false },
+                        new SAS(AlgorithmType.Octopus) { Enabled = false },
                     }
                 },
                 {
@@ -59,6 +60,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.Alephium) { Enabled = false },
                         new SAS(AlgorithmType.FishHash) { Enabled = true },
                         new SAS(AlgorithmType.PyrinHash) { Enabled = false },
+                        new SAS(AlgorithmType.Octopus) { Enabled = false },
                     }
                 },
                 {
