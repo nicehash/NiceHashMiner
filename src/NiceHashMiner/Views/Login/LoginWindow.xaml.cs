@@ -32,7 +32,7 @@ namespace NiceHashMiner.Views.Login
 
         private void LoginWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            BtcHttpServer.Instance.Stop();
+
         }
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -143,9 +143,6 @@ namespace NiceHashMiner.Views.Login
         private async void LoginWindow_Loaded(object sender, RoutedEventArgs e)
         {
             await InitQRCode();
-            // background Task
-            BtcHttpServer.Instance.SuccessfulHTTPLogin += ConfirmLogin;
-            BtcHttpServer.Instance.RunBackgrounTask();
         }
 
         public void ConfirmLogin(object sender, EventArgs e)
