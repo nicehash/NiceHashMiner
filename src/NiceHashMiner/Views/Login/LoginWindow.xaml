@@ -50,7 +50,7 @@
         <!--</Border>-->
 
         <Label Name="ScanLabel" Content="Scan with official NiceHash mobile application" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
-        <Button Name="ScanConfirmButton" Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Confirm_Scan_Click"/>
+        <Button Name="ScanConfirmButton" Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" ToolTip="Scan QR code with scanner in mining tab" Click="Confirm_Scan_Click"/>
 
         <StackPanel>
             <Button Style="{StaticResource OKButton}" ToolTip="You can get this address in the 'Mining' tab on www.nicehash.com once you log in" Width="220" Margin="0,8,0,0" HorizontalAlignment="Center" Content="Enter NiceHash Mining Address" Click="ManuallyEnterBtc_OnClick" />
