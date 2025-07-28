@@ -512,11 +512,17 @@ namespace NiceHashMiner
                     var prog = ((extractedEntries / entriesCount) * 100.0f);
                     progress?.Report((int)prog);
 
-                    var extractPath = Path.Combine(unzipLocation, entry.FullName);
+                    var rawExtractPath = Path.Combine(unzipLocation, entry.FullName);
+                    var extractPath = Path.GetFullPath(rawExtractPath);
+                    var fullUnzipLocation = Path.GetFullPath(unzipLocation + Path.DirectorySeparatorChar);
+                    if (!extractPath.StartsWith(fullUnzipLocation, StringComparison.Ordinal))
+                    {
+                        throw new InvalidOperationException($"Entry is outside the target dir: {extractPath}");
+                    }
                     var dirPath = Path.GetDirectoryName(extractPath);
                     if (!Directory.Exists(dirPath))
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
+                        Directory.CreateDirectory(dirPath);
                     }
                     //entry.ExtractToFile(extractPath, true);
 
