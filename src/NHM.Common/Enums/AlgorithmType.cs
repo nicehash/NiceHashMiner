@@ -148,7 +148,7 @@ namespace NHM.Common.Enums
         Alephium = 66, //24
         //[Obsolete("UNUSED Algorithm")]
         FishHash = 67,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         PyrinHash = 68,
         //[Obsolete("UNUSED Algorithm")]
         XelisHashV2 = 69
