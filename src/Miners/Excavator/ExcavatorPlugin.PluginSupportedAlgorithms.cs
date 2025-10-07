@@ -22,7 +22,6 @@ namespace Excavator
                         new SAS(AlgorithmType.KAWPOW) { Enabled = true, NonDefaultRAMLimit = (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt) { Enabled = true},
                         new SAS(AlgorithmType.ZelHash) { Enabled = true},
-                        new SAS(AlgorithmType.Alephium) { Enabled = true },
                         new SAS(AlgorithmType.FishHash) { Enabled = true},
                         new SAS(AlgorithmType.XelisHashV2) { Enabled = true}
                     }
@@ -37,7 +36,6 @@ namespace Excavator
                         new SAS(AlgorithmType.KAWPOW) { Enabled = true, NonDefaultRAMLimit =  (4UL << 30) },
                         new SAS(AlgorithmType.NeoScrypt) { Enabled = true },
                         new SAS(AlgorithmType.ZelHash) { Enabled = true },
-                        new SAS(AlgorithmType.Alephium) { Enabled = true },
                         new SAS(AlgorithmType.FishHash) { Enabled = true },
                         new SAS(AlgorithmType.XelisHashV2) { Enabled = true }
                     }
@@ -59,7 +57,6 @@ namespace Excavator
                 { AlgorithmType.NeoScrypt, "neoscrypt" },
                 { AlgorithmType.RandomXmonero, "randomx" },
                 { AlgorithmType.ZelHash, "zelhash" },
-                { AlgorithmType.Alephium, "alephium" },
                 { AlgorithmType.FishHash, "fishhash" },
                 { AlgorithmType.XelisHashV2, "xelishash" }
             }

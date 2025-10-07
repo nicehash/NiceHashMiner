@@ -144,7 +144,7 @@ namespace NHM.Common.Enums
         IronFish = 64,
         [Obsolete("UNUSED Algorithm")]
         KarlsenHash = 65,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Alephium = 66, //24
         //[Obsolete("UNUSED Algorithm")]
         FishHash = 67,

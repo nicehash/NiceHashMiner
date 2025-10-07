@@ -39,7 +39,6 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.NexaPow),
-                        new SAS(AlgorithmType.Alephium) { Enabled = false },
                         new SAS(AlgorithmType.FishHash) { Enabled = true },
                         new SAS(AlgorithmType.Octopus) { Enabled = false },
                     }
@@ -56,7 +55,6 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                         new SAS(AlgorithmType.NexaPow),
-                        new SAS(AlgorithmType.Alephium) { Enabled = false },
                         new SAS(AlgorithmType.FishHash) { Enabled = true },
                         new SAS(AlgorithmType.Octopus) { Enabled = false },
                     }
