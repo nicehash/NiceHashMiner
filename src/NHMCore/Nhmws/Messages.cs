@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NHMCore.Nhmws.V4;
 using System.Collections.Generic;
 
 namespace NHMCore.Nhmws
@@ -182,6 +183,39 @@ namespace NHMCore.Nhmws
         public int Id { get; set; }
         [JsonProperty("level")]
         public string Level { get; set; }
+    }
+
+    internal class MinerCallAction : IReceiveRpcMessage
+    {
+        [JsonProperty("method")]
+        public string Method => "miner.call.action";
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("device_id")]
+        public string DeviceId { get; set; }
+        [JsonProperty("action_id")]
+        public int ActionId { get; set; }
+        [JsonProperty("parameters")]
+        public List<string> Parameters { get; set; }
+    }
+
+    internal class MinerSetMutable : IReceiveRpcMessage
+    {
+        [JsonProperty("method")]
+        public string Method => "miner.set.mutable";
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("properties")]
+        public List<object> Properties { get; set; }
+        [JsonProperty("devices")]
+        public List<SetMutableDevice> Devices { get; set; }
+    }
+    internal class SetMutableDevice
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("properties")]
+        public List<object> Properties { get; set; }
     }
 
     // RPC response

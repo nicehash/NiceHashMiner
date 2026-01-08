@@ -167,7 +167,7 @@ namespace NHM.MinerPluginToolkitV1
 
         public virtual Dictionary<DeviceType, List<AlgorithmType>> SupportedDevicesAlgorithmsDict()
         {
-            DeviceType[] deviceTypes = new DeviceType[] { DeviceType.CPU, DeviceType.AMD, DeviceType.NVIDIA };
+            DeviceType[] deviceTypes = new DeviceType[] { DeviceType.CPU, DeviceType.AMD, DeviceType.NVIDIA, DeviceType.INTEL };
             var ret = new Dictionary<DeviceType, List<AlgorithmType>> { };
             foreach (var deviceType in deviceTypes)
             {

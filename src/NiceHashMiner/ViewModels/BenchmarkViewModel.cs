@@ -29,7 +29,9 @@ namespace NiceHashMiner.ViewModels
         public bool CanStartBenchmaring => BenchmarkManagerState.Instance.HasBenchmarkWork && BenchmarkManagerState.Instance.CanStartBenchmarking;
 
         public bool CanStart => BenchmarkManagerState.Instance.CanStart;
-
+        
+        public bool StartEnabled => BenchmarkManagerState.Instance.StartEnabled;
+        public bool CanStartAndButtonEnabled => CanStart && StartEnabled;
         public BenchmarkViewModel()
         {
             BenchmarkManagerState.Instance.PropertyChanged += Instance_PropertyChanged;
@@ -39,6 +41,8 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(CanStart));
             OnPropertyChanged(nameof(CanStartBenchmaring));
             OnPropertyChanged(nameof(SelectedBenchmarkType));
+            OnPropertyChanged(nameof(StartEnabled));
+            OnPropertyChanged(nameof(CanStartAndButtonEnabled));
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -46,20 +50,28 @@ namespace NiceHashMiner.ViewModels
             if (e.PropertyName == nameof(BenchmarkManagerState.CanStart))
             {
                 OnPropertyChanged(nameof(CanStart));
+                OnPropertyChanged(nameof(CanStartAndButtonEnabled));
             }
             if (e.PropertyName == nameof(BenchmarkManagerState.HasBenchmarkWork) || e.PropertyName == nameof(BenchmarkManagerState.CanStartBenchmarking))
             {
                 OnPropertyChanged(nameof(HasBenchmarkWork));
                 OnPropertyChanged(nameof(CanStartBenchmaring));
+                OnPropertyChanged(nameof(CanStartAndButtonEnabled));
             }
             if (e.PropertyName == nameof(BenchmarkManagerState.BenchmarksPending))
             {
                 OnPropertyChanged(nameof(BenchmarksPending));
                 OnPropertyChanged(nameof(BenchmarksPendingStr));
+                OnPropertyChanged(nameof(CanStartAndButtonEnabled));
             }
             if (e.PropertyName == nameof(BenchmarkManagerState.SelectedBenchmarkType))
             {
                 OnPropertyChanged(nameof(SelectedBenchmarkType));
+            }
+            if(e.PropertyName == nameof(BenchmarkManagerState.StartEnabled))
+            {
+                OnPropertyChanged(nameof(StartEnabled));
+                OnPropertyChanged(nameof(CanStartAndButtonEnabled));
             }
         }
 

@@ -1,6 +1,9 @@
 using NHM.Common;
+using NHM.Common.Enums;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Nhmws.V4;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -73,8 +76,12 @@ namespace NHMCore
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-                var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
-                if (!hasMissingGPUs) return;
+                var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs(MiscSettings.Instance.DetectIntegratedDevices);
+                if (!hasMissingGPUs.isMissing) return;
+                foreach(var missingItem in hasMissingGPUs.uuids)
+                {
+                    EventManager.Instance.AddEventMissingDevice(missingItem);
+                }
                 if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
@@ -138,5 +145,50 @@ namespace NHMCore
         }
 
         #endregion InternetCheck timer
+
+        #region FanProfile timer
+        private static AppTimer _fanProfileTimer;
+
+        public static void StartFanProfileTimer()
+        {
+            if (_fanProfileTimer?.IsActive ?? false) return;
+            _fanProfileTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
+            {
+                var devices = AvailableDevices.GPUs;
+                foreach (var device in devices) device.SetFanSpeedWithPidController();
+            },5000);
+            _fanProfileTimer.Start();
+        }
+
+        public static void StopFanProfileTimer()
+        {
+            _fanProfileTimer?.Stop();
+        }
+        #endregion
+
+        #region DeviceTimer
+        private static AppTimer _deviceTimer;
+
+        public static void StartDeviceCheckTimer()
+        {
+            if (_deviceTimer?.IsActive ?? false) return;
+            _deviceTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
+            {
+                var devs = AvailableDevices.Devices.SortedDevices();
+                foreach (var d in devs)
+                {
+                    if (d.DeviceType != DeviceType.CPU)
+                        NhmwsOverheatDetector.Instance.UpdateTempsAndWarnIfNeeded(d.ID, d.Name, d.B64Uuid, (int)d.Temp, d.VramTemperature);
+                    else
+                        NhmwsOverheatDetector.Instance.UpdateCPUTempsAndWarnIfNeeded(d.ID, d.Name, d.B64Uuid, (int)d.Temp);
+                }
+            }, 30000);
+            _deviceTimer.Start();
+        }
+        public static void StopDeviceCheckTimer()
+        {
+            _deviceTimer?.Stop();
+        }
+        #endregion
     }
 }

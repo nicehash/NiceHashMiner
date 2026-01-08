@@ -9,7 +9,7 @@ namespace NHM.Common
             {
                 BuildTag.TESTNET => "2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS",
                 BuildTag.TESTNETDEV => "2N2e2ET1jMY9r5is9KaTKnU3bkCFaYHEEEx",
-                _ => "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW", // BuildTag.PRODUCTION
+                _ => "NHbQTA7iMnCUuPjhkVCa99zbNUDFAry1nLH4", // BuildTag.PRODUCTION
             };
     }
 }

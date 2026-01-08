@@ -135,9 +135,9 @@ namespace AssemblyInfoVersionManager
                     Console.WriteLine("Error, something went wrong while reading files");
                     return;
                 }
-                var ret = GetCurrentVersionAndIncrement(foundFiles1.files, versionRule) &&
-                    GetCurrentVersionAndIncrement(foundFiles2.files, versionRule);
-                if (!ret)
+                var ret1 = GetCurrentVersionAndIncrement(foundFiles1.files, versionRule);
+                var ret2 = GetCurrentVersionAndIncrement(foundFiles2.files, versionRule);
+                if (!ret1 && !ret2)
                 {
                     Console.WriteLine($"Error, failed to increment versions");
                     return;

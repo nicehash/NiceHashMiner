@@ -6,8 +6,7 @@ namespace NHM.DeviceMonitoring.TDP
         TDPSettingType SettingType { get; set; }
 
         double TDPPercentage { get; }
-        bool SetTDPPercentage(double percentage);
-
+        bool SetTDP(double percentage);
         TDPSimpleType TDPSimple { get; }
         bool SetTDPSimple(TDPSimpleType level);
     }

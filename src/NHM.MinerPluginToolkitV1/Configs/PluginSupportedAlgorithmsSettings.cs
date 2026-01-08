@@ -28,7 +28,7 @@ namespace NHM.MinerPluginToolkitV1.Configs
         public Dictionary<DeviceType, List<SupportedAlgorithmSettings>> Algorithms { get; set; } = null;
 
         // for single algos
-        [Obsolete("UNUSED", false)]
+        //[Obsolete("UNUSED", false)]
         [JsonProperty("plugin_algorithm_name")]
         public Dictionary<AlgorithmType, string> AlgorithmNames { get; set; } = null;
 

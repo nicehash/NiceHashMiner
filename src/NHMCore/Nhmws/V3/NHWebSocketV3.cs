@@ -667,8 +667,6 @@ namespace NHMCore.Nhmws.V3
 
         private static Task<bool> SetPowerMode(string device, TDPSimpleType level)
         {
-            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
-
             var devs = device == "*" ?
                 AvailableDevices.Devices :
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);

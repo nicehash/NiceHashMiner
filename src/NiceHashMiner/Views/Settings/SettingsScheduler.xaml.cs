@@ -108,13 +108,13 @@ namespace NiceHashMiner.Views.Settings
         {
             textBoxSchedulerFrom.Text = "hh:mm";
             textBoxSchedulerTo.Text = "hh:mm";
-            cboxMon.IsChecked = false;
-            cboxTue.IsChecked = false;
-            cboxWed.IsChecked = false;
-            cboxThu.IsChecked = false;
-            cboxFri.IsChecked = false;
-            cboxSat.IsChecked = false;
-            cboxSun.IsChecked = false;
+            cboxMon.IsChecked = true;
+            cboxTue.IsChecked = true;
+            cboxWed.IsChecked = true;
+            cboxThu.IsChecked = true;
+            cboxFri.IsChecked = true;
+            cboxSat.IsChecked = true;
+            cboxSun.IsChecked = true;
         }
 
         private void textBoxSchedulerFrom_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)

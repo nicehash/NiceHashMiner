@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
         <local:MultipleInstanceToVisibilityConverter x:Key="MultipleInstanceToVisibilityConverter" />
+        <local:PreviewContentToVisibilityConverterNot x:Key="PreviewContentToVisibilityConverterNot"/>
         <Style TargetType="Grid" x:Key="previewGrid">
             <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
             <Setter Property="Margin" Value="0,0,0,10" />
@@ -166,13 +167,13 @@
                             <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding SingleParamString, Mode=OneWay}" MinWidth="130" Width="auto" x:Name="SingleParameterInput"
                                 TextChanged="SingleParameterInput_TextChanged"
                                 LostFocus="SingleParameterInput_LostFocus"
-                                IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding DoubleParamString, Mode=OneWay}" MinWidth="130" Width="auto" x:Name="DualParameterInput"
                                 TextChanged="DualParameterInput_TextChanged" 
                                 LostFocus="DualParameterInput_LostFocus"
-                                IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                         </StackPanel>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
@@ -187,12 +188,16 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="0,0,40,0">
-                    <Grid Style="{StaticResource previewGrid}"
-                          Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                <Grid Grid.Row="0" Margin="0,0,40,0" Style="{StaticResource previewGrid}">
+                    <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}" Background="#bfffc9">
                         <StackPanel Style="{StaticResource previewStackPanel}">
                             <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
                             <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding CombinedParams}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverterNot}}" Background="#ffbfbf" >
+                        <StackPanel Style="{StaticResource previewStackPanel}">
+                            <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview not available, incorrect or empty parameters for this level."/>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -241,11 +246,18 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Style="{StaticResource previewGrid}" Margin="0,10,0,0" Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}">
-                                        <StackPanel Style="{StaticResource previewStackPanel}">
-                                            <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
-                                            <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding .}"/>
-                                        </StackPanel>
+                                    <Grid Style="{StaticResource previewGrid}" Margin="0,10,0,0">
+                                        <Grid Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}" Background="#bfffc9">
+                                            <StackPanel Style="{StaticResource previewStackPanel}">
+                                                <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
+                                                <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding .}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverterNot}}" Background="#ffbfbf">
+                                            <StackPanel Style="{StaticResource previewStackPanel}">
+                                                <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview not available, incorrect or empty parameters for this level."/>
+                                            </StackPanel>
+                                        </Grid>                                    
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

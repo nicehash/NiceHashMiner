@@ -1,4 +1,7 @@
 ﻿using NHM.Common;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Core_voltage;
+using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
@@ -6,7 +9,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, ITDPWatts, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta, ICoreClockDelta, ICoreClockRangeDelta, IMemoryClockRangeDelta, ICoreVoltage, ICoreVoltageRange, ICoreVoltageSet, ICoreClockSetDelta, IMemoryClockSetDelta
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -134,11 +137,37 @@ namespace NHM.DeviceMonitoring
             return true;
         }
 
+        public bool ResetFanSpeedPercentage()
+        {
+            int ok = NVIDIA_MON.nhm_nvidia_device_reset_fan(BusID);
+            if(ok != RET_OK)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_reset_fan failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
+        }
+
 
         #region ITDP
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
+
+        public int TDPWatts
+        {
+            get
+            {
+                int tdpRaw = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_watt(BusID, ref tdpRaw);
+                if (ok != RET_OK)
+                {
+                    Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_watt failed with error code {ok}", _delayedLogging);
+                    return -1;
+                }
+                return tdpRaw;
+            }
+        }
 
         public double TDPPercentage
         {
@@ -167,11 +196,6 @@ namespace NHM.DeviceMonitoring
         
         public bool SetTDPSimple(TDPSimpleType level)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPSimple Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
             var percentage = PowerLevelToTDPPercentage(level);
             if (!percentage.HasValue)
             {
@@ -180,32 +204,46 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
+            uint min = 0;
+            uint max = 0;
+            uint def = 0;
+            var ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+
+            Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
+
+            var watts = percentage * def;
+
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(watts));
             if (execRet == RET_OK) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet == RET_OK;
         }
 
-        public bool SetTDPPercentage(double percentage)
+        public bool SetTDP(double watts)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+            var value = watts;
+            if (value <= 1.0d)
             {
-                Logger.InfoDelayed(LogTag, $"SetTDPPercentage Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
-            if (percentage < 0.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
-                percentage = 0.0d;
+                uint min = 0;
+                uint max = 0;
+                uint def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+                value = watts * def;
             }
 
-            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            Logger.Info(LogTag, $"SetTDP setting to {value}.");
+#if NHMWS4
+
+
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)value);
+#else
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
-            Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
+#endif
+            Logger.Info(LogTag, $"SetTDP returned {execRet}.");
             return execRet == RET_OK;
         }
 
-        #endregion ITDP
+#endregion ITDP
         public int SetMemoryTimings(string mt)
         {
             return NVIDIA_MON.nhm_nvidia_device_set_memory_timings(BusID, mt);
@@ -248,9 +286,195 @@ namespace NHM.DeviceMonitoring
                 return -1;
             }
         }
+
+        public int CoreClock
+        {
+            get
+            {
+                int coreClock = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks(BusID, ref coreClock);
+                if (ok == RET_OK) return coreClock;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int CoreClockDelta
+        {
+            get
+            {
+                int coreClockDelta = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_delta(BusID, ref coreClockDelta);
+                if (ok == RET_OK) return coreClockDelta;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_delta failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int MemoryClock
+        {
+            get
+            {
+                int memoryClock = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks(BusID, ref memoryClock);
+                if (ok == RET_OK) return memoryClock;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int MemoryClockDelta
+        {
+            get
+            {
+                int memoryClockDelta = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_delta(BusID, ref memoryClockDelta);
+                if (ok == RET_OK) return memoryClockDelta;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_delta failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+        public int CoreVoltage
+        {
+            get
+            {
+                int coreVoltage = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_core_voltage(BusID, ref coreVoltage);
+                if(ok == RET_OK) return coreVoltage;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_voltage failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
         public void PrintMemoryTimings()
         {
             NVIDIA_MON.nhm_nvidia_device_print_memory_timings(BusID);
         }
+
+        public bool SetCoreClock(int coreClock)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClock, true) == 0;
+        }
+        public bool SetMemoryClock(int memoryClock)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClock, true) == 0;
+        }
+        public bool SetCoreClockDelta(int coreClockDelta)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClockDelta, false) == 0;
+        }
+        public bool SetMemoryClockDelta(int memoryClockDelta)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClockDelta, false) == 0;
+        }
+        public (bool ok, int min, int max, int def) GetTDPLimits()
+        {
+            uint min = 0;
+            uint max = 0;
+            uint def = 0;
+            var ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+            if (ok == RET_OK) return (true, (int)min, (int)max, (int)def);
+            Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
+            return (false, 0, 0, 0);
+        }
+
+        public bool SetCoreVoltage(int coreVoltage)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_core_voltage(BusID, coreVoltage) == 0;
+        }
+
+        public bool ResetCoreVoltage()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_core_voltage(BusID) == 0;
+        }
+
+        public bool ResetMemoryClock()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_memory_clocks(BusID, true) == 0;
+        }
+
+        public bool ResetCoreClock()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_core_clocks(BusID, true) == 0;
+        }
+
+        public bool ResetMemoryClockDelta()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_memory_clocks(BusID, false) == 0;
+        }
+
+        public bool ResetCoreClockDelta()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_core_clocks(BusID, false) == 0;
+        }
+        public (bool ok, int min, int max, int def) CoreClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default_absolute(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default_absolute failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+
+            }
+        }
+        public (bool ok, int min, int max, int def) MemoryClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default_absolute(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default_absolute failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default_delta(BusID, ref min, ref max, ref def); //problem here not found
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default_delta failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreClockRangeDelta
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default_delta(BusID, ref min, ref max, ref def);//problem here not found
+                if(ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default_delta failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreVoltageRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_voltage_min_max_default(BusID, ref min, ref max, ref def);
+                if(ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_voltage_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        } 
     }
 }

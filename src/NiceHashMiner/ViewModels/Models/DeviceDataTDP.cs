@@ -26,7 +26,7 @@ namespace NiceHashMiner.ViewModels.Models
         public void SetPercentage(double value)
         {
             var perc = value / 100.0;
-            TDPSet(_tdpMon.SetTDPPercentage(perc));
+            TDPSet(_tdpMon.SetTDP(perc));
         }
 
         public DeviceDataTDP(ComputeDevice dev)

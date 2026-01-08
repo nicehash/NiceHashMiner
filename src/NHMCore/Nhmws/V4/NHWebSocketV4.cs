@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -13,18 +16,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using WebSocketSharp;
+using Windows.Media.PlayTo;
+using Logger = NHM.Common.Logger;
 // static imports
 using NHLog = NHM.Common.Logger;
 
 namespace NHMCore.Nhmws.V4
 {
-    static class NHWebSocketV4
+    public static class NHWebSocketV4
     {
         #region locking
-
+        private static readonly string _logTag = "NHWebSocketV4";
         private static readonly object _lock = new object();
         private class LockingProperty<T>
         {
@@ -62,8 +69,9 @@ namespace NHMCore.Nhmws.V4
         {
             CLOSE_WEBSOCKET = 0,
             SEND_MESSAGE_STATUS,
+            SEND_MESSAGE_EVENT
         }
-
+        private static readonly string _TAG = "NHWebSocketV4";
         static private bool _isNhmwsRestart = false;
 
         static private bool IsWsAlive => _webSocket?.ReadyState == WebSocketState.Open;
@@ -72,9 +80,10 @@ namespace NHMCore.Nhmws.V4
 
         static private LoginMessage _login = new LoginMessage
         {
-            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
+            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
             Btc = DemoUser.BTC,
         };
+        private static MinerState CachedState = null;
 
         static private ConcurrentQueue<MessageEventArgs> _recieveQueue { get; set; } = new ConcurrentQueue<MessageEventArgs>();
         static private ConcurrentQueue<IEnumerable<(MessageType type, string msg)>> _sendQueue { get; set; } = new ConcurrentQueue<IEnumerable<(MessageType type, string msg)>>();
@@ -264,6 +273,7 @@ namespace NHMCore.Nhmws.V4
                         _isNhmwsRestart = true;
                         break;
                     case MessageType.SEND_MESSAGE_STATUS:
+                    case MessageType.SEND_MESSAGE_EVENT:
                         Send(data);
                         _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
                         break;
@@ -312,18 +322,137 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
-            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
+            string workerToSend = worker == null ? string.Empty : worker;
+            string btcToSend = btc == null ? string.Empty : btc;
+            ActionMutableMap.ResetArrays();
+            if (CachedState != null) CachedState = null;
+            _login = MessageParserV4.CreateLoginMessage(btcToSend, workerToSend, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
-            if (worker != null) _login.Worker = worker;
+            else _login.Btc = CredentialsSettings.Instance.BitcoinAddress;
+            if (!string.IsNullOrEmpty(worker)) _login.Worker = worker;
+            else _login.Worker = CredentialsSettings.Instance.WorkerName;
             //if (group != null) _login.Group = group;
             // on credentials change always send close websocket message
             var closeMsg = (MessageType.CLOSE_WEBSOCKET, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
             _sendQueue.EnqueueParams(closeMsg);
         }
 
-        #region Message handling
+        public static void SendEvent(NhmwsEvent ev)
+        {
+            //DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
+            //var unixTime = now.ToUnixTimeSeconds();
+            //var newEvent = new NhmwsEvent()
+            //{
+            //    EventID = (int)id,
+            //    Time = unixTime,
+            //    DeviceID = ev.DeviceID,
+            //    Message = ev.Message
+            //};
+            var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(ev));
+            _sendQueue.EnqueueParams(eventMSG);
+        }
 
-        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices()));
+        #region Message handling
+        private static bool AreEqual(JArray first, JArray second)
+        {
+            if (first == null && second == null) return true;
+            if (first == null || second == null) return false;
+            return JsonConvert.SerializeObject(first) == JsonConvert.SerializeObject(second);
+        }
+        private static MinerState.DeviceState GetDeviceStateDelta(MinerState.DeviceState first, MinerState.DeviceState second)
+        {
+            if (first == null || second == null) return second;
+            var devState = new MinerState.DeviceState();
+            //if (!AreEqual(first.OptionalDynamicValues, second.OptionalDynamicValues))
+            //{
+            //    devState.OptionalDynamicValues = second.OptionalDynamicValues;
+            //}
+            //if (!AreEqual(first.MandatoryDynamicValues, second.MandatoryDynamicValues))
+            //{
+            //    devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
+            //}
+            devState.OptionalDynamicValues = second.OptionalDynamicValues;
+            devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
+            if (!AreEqual(first.OptionalMutableValues, second.OptionalMutableValues))
+            {
+                devState.OptionalMutableValues = second.OptionalMutableValues;
+            }
+            if (!AreEqual(first.MandatoryMutableValues, second.MandatoryMutableValues))
+            {
+                devState.MandatoryMutableValues = second.MandatoryMutableValues;
+            }
+            return devState;
+        }
+        private static bool AreDeviceListsComparable(List<MinerState.DeviceState> first, List<MinerState.DeviceState> second)
+        {
+            if (first == null || second == null) return true;
+            if (first.Count != second.Count) return false;
+            return true;
+        }
+
+        private static MinerState GetDeltaProperties(MinerState prev, MinerState next)
+        {
+            MinerState ret = new MinerState();
+            //if (!AreEqual(prev.MutableDynamicValues, next.MutableDynamicValues))
+            //{
+            //    ret.MutableDynamicValues = next.MutableDynamicValues;
+            //}
+            ret.MutableDynamicValues = next.MutableDynamicValues;
+            if (!AreEqual(prev.OptionalDynamicValues, next.OptionalDynamicValues))
+            {
+                ret.OptionalDynamicValues = next.OptionalDynamicValues;
+            }
+            if (!AreEqual(prev.OptionalMutableValues, next.OptionalMutableValues))
+            {
+                ret.OptionalMutableValues = next.OptionalMutableValues;
+            }
+            if (!AreEqual(prev.MandatoryMutableValues, next.MandatoryMutableValues))
+            {
+                ret.MandatoryMutableValues = next.MandatoryMutableValues;
+            }
+
+            if (AreDeviceListsComparable(prev.Devices, next.Devices))
+            {
+                if (prev.Devices == null && next.Devices == null) return ret;
+                if(prev.Devices == null && next.Devices != null)
+                {
+                    ret.Devices = next.Devices;
+                    return ret;
+                }
+                if(prev.Devices != null && next.Devices == null)
+                {
+                    ret.Devices = null;
+                    return ret;
+                }
+                ret.Devices = new();
+                for(int i = 0; i < next.Devices.Count; i++)
+                {
+                    ret.Devices.Add(GetDeviceStateDelta(prev.Devices[i], next.Devices[i]));
+                }
+            }
+            else
+            {
+                ret.Devices = next.Devices;
+            }
+            return ret;
+        }
+        private static string CreateMinerStatusMessage()
+        {
+            var nextState = MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices());
+            var shrinkedState = new MinerState();
+            var json = string.Empty;
+            if (CachedState != null) //if we have something cached
+            {
+                shrinkedState = GetDeltaProperties(CachedState, nextState);
+                json = JsonConvert.SerializeObject(shrinkedState);
+            }
+            else
+            {
+                json = JsonConvert.SerializeObject(nextState);
+            }
+            CachedState = nextState;
+            return json;
+        }
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
@@ -593,10 +722,12 @@ namespace NHMCore.Nhmws.V4
         }
         #endregion Stop
 
+        #region Actions
+
+        #endregion Actions
+
         private static Task<bool> SetPowerMode(string device, TDPSimpleType level)
         {
-            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
-
             var devs = device == "*" ?
                 AvailableDevices.Devices :
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
@@ -673,9 +804,412 @@ namespace NHMCore.Nhmws.V4
                 _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc),
             };
         }
+        private static Task<(ErrorCode err, string msg)> CallAction(MinerCallAction action)
+        {
+            var actionRecord = ActionMutableMap.FindActionOrNull(action.ActionId);
+            if (actionRecord == null)
+            {
+                Logger.Error("NHWebSocketV4", "Action not found");
+                return Task.FromResult((ErrorCode.ActionNotFound, "Action not found"));
+            }
+            //action has single parameter anyway FOR NOW
+            //in the future return multiple actions success/partial/failiure
+            var ret = (ErrorCode.NoError, string.Empty);
+            foreach (var param in action.Parameters)
+            {
+                ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, param).Result;
+            }
+            if (!action.Parameters.Any())
+            {
+                ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, string.Empty).Result;
+            }
+            return Task.FromResult(ret);
+        }
+        private static Task<(ErrorCode err, string msg)> ParseAndCallAction(string deviceUUID, int messageID, SupportedAction typeOfAction, string parameters)
+        {
+            ErrorCode err = ErrorCode.NoError;
+            var result = string.Empty;
+            switch (typeOfAction)
+            {
+                case SupportedAction.ActionStartMining:
+                    _ = startMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    break;
+                case SupportedAction.ActionStopMining:
+                    _ = stopMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    break;
+                case SupportedAction.ActionRebenchmark:
+                    if(deviceUUID == string.Empty) (err, result) = ApplicationStateManager.StartReBenchmark().Result;
+                    else
+                    {
+                        (err, result) = ApplicationStateManager.StartRebenchmarkSpecific(deviceUUID).Result;
+                    }
+                    break;
+                case SupportedAction.ActionProfilesBundleSet:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
+                    _ = ExecuteProfilesBundleReset(false);
+                    _ = ExecuteProfilesBundleSet(bundle);
+                    MiningState.Instance.CalculateDevicesStateChange();
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    if(err == ErrorCode.NoError)
+                    {
+                        EventManager.Instance.AddEventBundleApplied(bundle.Name,true);
+                    }
+                    break;
+                case SupportedAction.ActionProfilesBundleReset:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    ExecuteProfilesBundleReset();
+                    MiningState.Instance.CalculateDevicesStateChange();
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    break;
+                case SupportedAction.ActionDeviceEnable:
+                    _ = SetDevicesEnabled(deviceUUID, true);
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    break;
+                case SupportedAction.ActionDeviceDisable:
+                    _ = SetDevicesEnabled(deviceUUID, false);
+                    (err, result) = (ErrorCode.NoError, "OK");
+                    break;
+                case SupportedAction.ActionOcProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
+                    (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
+                    var eventRet = err == ErrorCode.NoError ? EventType.TestOCApplied : EventType.TestOCFailed;
+                    var dev = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID);
+                    if (dev != null)
+                    {
+                        if (eventRet == EventType.TestOCApplied) EventManager.Instance.AddEventTestOCApplied(dev.Name, dev.B64Uuid, true);
+                        else EventManager.Instance.AddEventTestOCFailed(dev.Name, dev.B64Uuid, true);
+                    }
+                    break;
+                case SupportedAction.ActionOcProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    (err, result) = StopOCTestForDevice(deviceUUID).Result;
+                    break;
+                case SupportedAction.ActionFanProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    var fan = JsonConvert.DeserializeObject<FanProfile>(parameters);
+                    (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
+                    break;
+                case SupportedAction.ActionFanProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    if (!MiscSettings.Instance.EnableGPUManagement)
+                    {
+                        (err, result) = (ErrorCode.InternalNhmError, "GPU management disabled");
+                        break;
+                    }
+                    (err, result) = StopFanTestForDevice(deviceUUID).Result;
+                    break;
+                case SupportedAction.ActionElpProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    var elp = JsonConvert.DeserializeObject<ElpProfile>(parameters);
+                    (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
+                    MiningState.Instance.CalculateDevicesStateChange();
+                    break;
+                case SupportedAction.ActionElpProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
+                    (err, result) = StopELPTestForDevice(deviceUUID).Result;
+                    MiningState.Instance.CalculateDevicesStateChange();
+                    break;
+                case SupportedAction.ActionRestart:
+                    EventManager.Instance.AddEventRigRestart(true);
+                    _ = RestartRig();
+                    (err, result) = (ErrorCode.NoError, "Restarting rig");
+                    break;
+                case SupportedAction.ActionShutdown:
+                    _ = ShutdownRig();
+                    (err, result) = (ErrorCode.NoError, "Shutting down rig");
+                    break;
+                case SupportedAction.ActionSystemDump:
+                    (err, result) = CreateAndUploadSystemDump().Result;
+                    break;
+                default:
+                    NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
+                    break;
+            }
+            _ = UpdateMinerStatus();
+            if(err != ErrorCode.NoError)
+            {
+                Logger.Warn(_TAG, $"Action ({typeOfAction}) completed with non zero status: {err}");
+            }
+            return Task.FromResult((err, result));
+        }
+        private static async Task ShutdownRig()
+        {
+            try
+            {
+                if (AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig shutdown called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/s /t 5");
+        }
+
+        private static async Task RestartRig()
+        {
+
+            try
+            {
+                if(AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                Helpers.CreateRunOnStartupBackup();
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig restart called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/r /t 5");
+        }
+
+        public static async Task<(ErrorCode err, string msg)> CreateAndUploadSystemDump()
+        {
+            var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();
+            AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
+            if (success) return (ErrorCode.NoError, "System dump upload successful");
+            return (ErrorCode.ErrFailedSystemDump, "System dump upload failed");
+        }
+        public static Task UpdateMinerStatus()
+        {
+            var minerStatusJsonStr = CreateMinerStatusMessage();
+            _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+            return Task.CompletedTask;
+        }
+
+        private static Task ExecuteProfilesBundleSet(Bundle bundle)
+        {
+            BundleManager.SetBundleInfo(bundle.Name, bundle.Id);
+            _ = BundleManager.SaveBundle(bundle);
+            if (bundle.OcBundles != null)
+            {
+                var retOC = OCManager.Instance.ApplyOcBundle(bundle.OcBundles);
+            }
+            if (bundle.FanBundles != null)
+            {
+                var retFan = FanManager.Instance.ApplyFanBundle(bundle.FanBundles);
+            }
+            if (bundle.ElpBundles != null)
+            {
+                var retELP = ELPManager.Instance.ApplyELPBundle(bundle.ElpBundles);
+            }
+            return Task.CompletedTask;
+        }
+        private static Task StopTestsForDevice(string deviceUUID)
+        {
+            StopOCTestForDevice(deviceUUID, false);
+            StopFanTestForDevice(deviceUUID, false);
+            StopELPTestForDevice(deviceUUID, false);
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteProfilesBundleReset(bool triggerSwitch = true)
+        {
+            BundleManager.ResetBundleInfo();
+            var retOC = OCManager.Instance.ResetOcBundle(triggerSwitch);
+            var retFan = FanManager.Instance.ResetFanBundle(triggerSwitch);
+            var retElp = ELPManager.Instance.ResetELPBundle(triggerSwitch);
+            return Task.CompletedTask;
+        }
+        private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcProfile ocBundle)
+        {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            StopTestsForDevice(deviceUUID);
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> StopOCTestForDevice(string deviceUUID, bool triggerSwitch = true)
+        {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            var res = OCManager.Instance.StopTest(deviceUUID, triggerSwitch);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpProfile elpBundle)
+        {
+            StopTestsForDevice(deviceUUID);
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> StopELPTestForDevice(string deviceUUID, bool triggerSwitch = true)
+        {
+            var res = ELPManager.Instance.StopTest(deviceUUID, triggerSwitch);
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            return Task.FromResult(res.Result);
+        }
+
+        private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanProfile fanBundle)
+        {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            StopTestsForDevice(deviceUUID);
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            var res = FanManager.Instance.ExecuteTest(deviceUUID, fanBundle);
+            return Task.FromResult(res.Result);
+        }
+
+        private static Task<(ErrorCode err, string msg)> StopFanTestForDevice(string deviceUUID, bool triggerSwitch = true)
+        {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            ELPManager.Instance.RestartMiningInstanceIfNeeded();
+            var res = FanManager.Instance.StopTest(deviceUUID, triggerSwitch);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<string> SetMutable(MinerSetMutable mutableCmd)
+        {
+            if (mutableCmd.Properties != null)
+            {
+                var resArray = new List<int>();
+                foreach (var property in mutableCmd.Properties)
+                {
+                    resArray.Add(HandleProperty(property).Result);
+                }
+                if (resArray.All(r => r == 0)) return Task.FromResult(string.Empty);
+                var appendix = resArray.Contains(-3) ? "Have you stopped mining?" : string.Empty;
+                return Task.FromResult($"SetMutable error ({string.Join(",", resArray)}) {appendix}");
+            }
+            if (mutableCmd.Devices == null) return Task.FromResult(string.Empty);
+            string result = string.Empty;
+            foreach (var device in mutableCmd.Devices)
+            {
+                if (device.Properties == null) continue;
+                var deviceTarget = AvailableDevices.Devices.Where(d => d.B64Uuid == device.Id).FirstOrDefault();
+                if (deviceTarget == null) continue;
+                if (deviceTarget.IsMiningBenchingTesting)
+                {
+                    result += $"({device.Id}):Stop device first\n";
+                    continue;
+                }
+                foreach (var property in device.Properties)
+                {
+                    HandleProperty(property);
+                }
+            }
+            return Task.FromResult(result);
+        }
+        private static Task<int> HandleProperty(object property)
+        {
+            if (property is not JToken token) return Task.FromResult(-1);
+            var genericProperty = token.ToObject<Property>();
+            var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);//this is null if per rig
+            if (mutable == null) return Task.FromResult(-2);
+            object t = mutable.PropertyType switch
+            {
+                Type.String => ParseAndActMutableString(mutable, token),
+                Type.Int => ParseAndActMutableInt(mutable, token),
+                Type.Enum => ParseAndActMutableEnum(mutable, token),
+                Type.Bool => ParseAndActMutableBool(mutable, token),
+                _ => throw new InvalidOperationException()
+            };
+            if(t is Task<int> res) return Task.FromResult(res.Result);
+            return Task.FromResult(0);
+        }
+        static Task<int> ParseAndActMutableString(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyString>();
+            var res = property.ExecuteTask(mutable.Value);
+            if (res.Result is int resInt) return Task.FromResult(resInt);
+            return Task.FromResult(-100);
+        }
+        static Task ParseAndActMutableInt(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyInt>();
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableEnum(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyEnum>();
+            return Task.CompletedTask;
+        }
+        static Task<int> ParseAndActMutableBool(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyBool>();
+            var res = property.ExecuteTask(mutable.Value);
+            if (res.Result is int resInt) return Task.FromResult(resInt);
+            return Task.FromResult(-101);
+        }
 
         #endregion RpcMessages
-
         static private async Task HandleRpcMessage(IReceiveRpcMessage rpcMsg)
         {
             bool success = false;
@@ -699,12 +1233,26 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
+                    MinerCallAction m => await CallAction(m),
+                    MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };
-
-                string rpcAnswer = t is string rpcAnws ? rpcAnws : null;
-                if (t is bool ok) success = ok;
-                executedCall = new ExecutedCall(rpcMsg.Id, 0, rpcAnswer);
+                if (t is bool ok)
+                {
+                    success = ok;
+                    executedCall = new ExecutedCall(rpcMsg.Id, 0, string.Empty);
+                }
+                else if (t is (ErrorCode err, string msg))
+                {
+                    success = err == ErrorCode.NoError ? true : false;
+                    executedCall = new ExecutedCall(rpcMsg.Id, (int)err, msg);
+                }
+                else if (t is string answer)
+                {
+                    var errorCode = answer == string.Empty ? 0 : -1;
+                    executedCall = new ExecutedCall(rpcMsg.Id, errorCode, answer);
+                }
+                else executedCall = new ExecutedCall(rpcMsg.Id, -1, "Failed to execute!");
             }
             catch (RpcException rpcEx)
             {

@@ -135,6 +135,19 @@ namespace NiceHashMiner
                 catch
                 { }
             }
+            else
+            {
+                try
+                {
+                    string path = Paths.RootPath("extra_rig_seed.txt");
+                    Random r = new Random();
+                    if (!File.Exists(path)) File.WriteAllText(path, r.NextInt64(1, 100000).ToString());
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("App.xaml.cs", $"{ex.Message}");
+                }
+            }
 
             // Init logger
             Logger.ConfigureWithFile(LoggingDebugConsoleSettings.Instance.LogToFile, Level.Info, LoggingDebugConsoleSettings.Instance.LogMaxFileSize);

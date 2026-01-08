@@ -142,7 +142,7 @@
             <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" Height="Auto" Grid.RowSpan="2">
                 <ToggleButton DockPanel.Dock="Top" Style="{DynamicResource StartStopButtonLight}"
                               Margin="0,24,0,0"
-                              IsEnabled="{Binding BenchmarkSettings.CanStart}"
+                              IsEnabled="{Binding BenchmarkSettings.CanStartAndButtonEnabled}"
                               IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
                               VerticalAlignment="Center" HorizontalAlignment="Center"
                               x:Name="StartStopToggleButton"

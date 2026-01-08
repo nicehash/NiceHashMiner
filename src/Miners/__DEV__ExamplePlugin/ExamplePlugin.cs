@@ -69,16 +69,6 @@ namespace Example
                 {
                     algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto));
                 }
-                // only NVIDIA supports Lyra2REv3
-                if (device.DeviceType == DeviceType.NVIDIA)
-                {
-                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3));
-                }
-                // only AMD supports 
-                if (device.DeviceType == DeviceType.AMD)
-                {
-                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo32));
-                }
 
                 supported.Add(device, algorithms);
             }

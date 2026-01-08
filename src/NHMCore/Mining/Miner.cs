@@ -226,7 +226,11 @@ namespace NHMCore.Mining
             var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
+#if NHMWS4
+            _algos.ForEach(a => a.ComputeDevice.State = a.IsTesting ? DeviceState.Testing : DeviceState.Mining);
+#else
             _algos.ForEach(a => a.ComputeDevice.State = DeviceState.Mining);
+#endif
             return ret;
         }
 
@@ -326,6 +330,7 @@ namespace NHMCore.Mining
                         }
                         if (restartCount >= maxRestartCount)
                         {
+                            Logger.Error(MinerTag(), $"Restart count of {MinerDeviceName} - {MinerTag()} exceeded {maxRestartCount}, algorithm unstable");
                             var firstAlgo = _algos.FirstOrDefault();
                             Random randWait = new Random();
                             firstAlgo.IgnoreUntil = DateTime.UtcNow.AddMinutes(randWait.Next(20, 30));

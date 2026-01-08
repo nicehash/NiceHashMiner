@@ -8,9 +8,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
+    <DefineConstants>$(DefineConstants)TRACE;NHMWS4</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CA1416</NoWarn>
+    <DefineConstants>$(DefineConstants)TRACE;NHMWS4</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj" />

@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.7.5",
-                ExePath = new List<string> { "nanominer-windows-3.7.5-cuda11", "nanominer.exe" },
+                BinVersion = "v3.10.0",
+                ExePath = new List<string> { "nanominer-windows-3.10.0", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.7.5/nanominer-windows-3.7.5-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.10.0/nanominer-windows-3.10.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +43,7 @@ namespace NanoMiner
         public override string Name => "NanoMiner";
 
 
-        public override Version Version => new Version(19, 3);
+        public override Version Version => new Version(24, 1);
 
         public override string Author => "info@nicehash.com";
 
@@ -77,7 +77,7 @@ namespace NanoMiner
                 .Select(gpu => (gpu, algorithms: GetSupportedAlgorithmsForDevice(gpu)))
                 .Where(p => p.algorithms.Any())
                 .ToDictionary(p => p.gpu, p => p.algorithms);
-            
+
             foreach (var cpu in cpus)
             {
                 supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));

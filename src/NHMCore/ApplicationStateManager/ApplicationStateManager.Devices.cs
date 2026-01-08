@@ -26,38 +26,40 @@ namespace NHMCore
             // TODO log sender
             var isAllDevices = "*" == uuid;
             var devicesToSet = isAllDevices ? AvailableDevices.Devices : new ComputeDevice[] { AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid) };
-
+            bool startMiningViaToggleCondition = false;
             var tasks = devicesToSet
                 .Where(dev => dev != null)
                 .Distinct()
                 .Select(dev => SetDeviceEnabledState(dev, enabled))
                 .ToArray();
-
-            var thisDevice = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
-            var isAnyOtherDeviceMining = AvailableDevices.Devices?.Where(d => d.Enabled)?
-                .SelectMany(d => d.AlgorithmSettings)?
-                .Where(a => a.ComputeDevice.B64Uuid != thisDevice.B64Uuid)?
-                .Any(a => a.IsCurrentlyMining);
-            var isThisDeviceMining = thisDevice.AlgorithmSettings?.Any(a => a.IsCurrentlyMining);
-            if (isAnyOtherDeviceMining != null && isThisDeviceMining != null) //when mining and stop by toggle, this device mining is false...
+            foreach(var devUuid in devicesToSet.Select(d => d.Uuid))
             {
-                if (enabled)
+                var thisDevice = AvailableDevices.GetDeviceWithUuidOrB64Uuid(devUuid);
+                var isAnyOtherDeviceMining = AvailableDevices.Devices?.Where(d => d.Enabled)?
+                    .SelectMany(d => d.AlgorithmSettings)?
+                    .Where(a => a.ComputeDevice.B64Uuid != thisDevice.B64Uuid)?
+                    .Any(a => a.IsCurrentlyMining);
+                var isThisDeviceMining = thisDevice.AlgorithmSettings?.Any(a => a.IsCurrentlyMining);
+                if (isAnyOtherDeviceMining != null && isThisDeviceMining != null) //when mining and stop by toggle, this device mining is false...
                 {
-                    if ((bool)!isThisDeviceMining && !(bool)isAnyOtherDeviceMining && MiningState.Instance.MiningStoppedByToggle)
+                    if (enabled) 
                     {
-                        MiningState.Instance.MiningStoppedByToggle = false;
-                        _ = StartAllAvailableDevicesTask();
+                        if ((bool)!isThisDeviceMining && !(bool)isAnyOtherDeviceMining && MiningState.Instance.MiningStoppedByToggle)
+                        {
+                            MiningState.Instance.MiningStoppedByToggle = false;
+                            startMiningViaToggleCondition = true;
+                        }
                     }
-                }
-                else
-                {
-                    if ((bool)isThisDeviceMining && !(bool)isAnyOtherDeviceMining) //todo check if this device not mining by now
+                    else
                     {
-                        MiningState.Instance.MiningStoppedByToggle = true;
+                        if ((bool)isThisDeviceMining && !(bool)isAnyOtherDeviceMining) //todo check if this device not mining by now
+                        {
+                            MiningState.Instance.MiningStoppedByToggle = true;
+                        }
                     }
                 }
             }
-
+            if(startMiningViaToggleCondition) _ = StartAllAvailableDevicesTask();
             // await tasks
             await Task.WhenAll(tasks);
         }

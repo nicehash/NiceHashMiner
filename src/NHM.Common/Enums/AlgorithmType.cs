@@ -90,9 +90,9 @@ namespace NHM.Common.Enums
         Beam = 37,
         [Obsolete("UNUSED Algorithm", true)]
         GrinCuckaroo29 = 38,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         GrinCuckatoo31 = 39,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Lyra2REv3 = 40,
         [Obsolete("NOT SUPPORTED. UNUSED Algorithm", true)]
         MTP = 41,
@@ -112,7 +112,7 @@ namespace NHM.Common.Enums
         Eaglesong = 48,
         [Obsolete("UNUSED Algorithm", true)]
         Cuckaroom = 49,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         GrinCuckatoo32 = 50,
         [Obsolete("UNUSED Algorithm", true)]
         Handshake = 51,
@@ -136,8 +136,23 @@ namespace NHM.Common.Enums
         EtcHash = 60,
         //[Obsolete("UNUSED Algorithm")]
         VerusHash = 61,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         KHeavyHash = 62,
+        //[Obsolete("UNUSED Algorithm")]
+        NexaPow = 63,
+        [Obsolete("UNUSED Algorithm")]
+        IronFish = 64,
+        [Obsolete("UNUSED Algorithm")]
+        KarlsenHash = 65,
+        [Obsolete("UNUSED Algorithm")]
+        Alephium = 66, //24
+        //[Obsolete("UNUSED Algorithm")]
+        FishHash = 67,
+        [Obsolete("UNUSED Algorithm")]
+        PyrinHash = 68,
+        //[Obsolete("UNUSED Algorithm")]
+        XelisHashV2 = 69
+
         #endregion // NiceHashAPI
     }
 

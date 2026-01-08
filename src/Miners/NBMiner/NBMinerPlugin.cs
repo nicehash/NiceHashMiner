@@ -46,8 +46,8 @@ namespace NBMiner
 
         public override string Name => "NBMiner";
 
-        public override Version Version => new Version(19, 4);
-        
+        public override Version Version => new Version(23, 1);
+
 
         public override string Author => "info@nicehash.com";
 
@@ -83,7 +83,6 @@ namespace NBMiner
             {
                 _mappedIDs[gpu.UUID] = minerDeviceId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
-                if (gpu is CUDADevice cuda && cuda.SM_major >= 8) algorithms = algorithms.Where(a => a.FirstAlgorithmType != AlgorithmType.GrinCuckatoo32).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
@@ -168,7 +167,7 @@ namespace NBMiner
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
 
-    public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }

@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace NHMCore.Configs
                 LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
                 LogMaxFileSize = LoggingDebugConsoleSettings.Instance.LogMaxFileSize,
                 DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
-                DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
+                AllowMultipleInstances = MiscSettings.Instance.AllowMultipleInstances,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
@@ -139,14 +140,25 @@ namespace NHMCore.Configs
                    || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
                    || LoggingDebugConsoleSettings.Instance.LogMaxFileSize != _generalConfigBackup.LogMaxFileSize
                    || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
+                   || MiscSettings.Instance.AllowMultipleInstances != _generalConfigBackup.AllowMultipleInstances;
         }
 
         public static void GeneralConfigFileCommit()
         {
             ApplicationStateManager.App.Dispatcher.Invoke(() =>
             {
-                InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                var res = InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                if (!res)
+                {
+                    try
+                    {
+                        EventManager.Instance.AddEventGeneralCfg();
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.Error("ConfigManager", ex.Message);
+                    }
+                }
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
             });
         }
@@ -227,6 +239,7 @@ namespace NHMCore.Configs
             public long LogMaxFileSize { get; set; }
             public bool DisableWindowsErrorReporting { get; set; }
             public bool DisableDevicePowerModeSettings { get; set; }
+            public bool AllowMultipleInstances { get; set; }
         }
 
         public static void SetDefaults()

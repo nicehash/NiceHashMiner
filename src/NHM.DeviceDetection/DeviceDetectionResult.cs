@@ -31,7 +31,10 @@ namespace NHM.DeviceDetection
         public Version AmdDriver { get; internal set; }
         public bool AMDDriverObsolete { get; internal set; }
 
-
+        // INTEL
+        public IReadOnlyList<IntelDevice> IntelDevices { get; internal set; } = new List<IntelDevice>();
+        public bool HasIntelDevices => IntelDevices != null && IntelDevices.Count > 0;
+        public Version IntelDriver { get; internal set; }
 
         // FAKE
         public IReadOnlyList<FakeDevice> FAKEDevices { get; internal set; }

@@ -1371,15 +1371,8 @@
       "zh_cn": "禁用设备",
       "si": "Onemogoči naprava"
     },
-    "Disable Device Power Mode Settings": {
-      "ru": "Отключить настройку режима энергопотребления устройства",
-      "de": "Energiemoduseinstellungen des Geräts deaktivieren",
-      "fr": "Désactiver Paramètres Du Mode d'Alimentation Des Appareils",
-      "es": "Desactivar la configuración del modo de alimentación del dispositivo",
-      "pt": "Desabilitar Configurações do Modo de Energia do Dispositivo",
-      "jp": "デバイス電力モード設定無効化",
-      "zh_cn": "关闭设备功耗模式设置",
-      "si": "Onemogoči nastavitve načina napajanja naprave"
+    "Disable Device Overclocking": {
+
     },
     "Disable Device Status Monitoring": {
       "ru": "Отключить мониторинг статуса устройства",

@@ -21,5 +21,6 @@ namespace NHM.Common.Device
 
         // AMD always true
         public bool IsOpenCLBackendEnabled => true;
+        public bool IsIntegrated { get; set; } = false;
     }
 }

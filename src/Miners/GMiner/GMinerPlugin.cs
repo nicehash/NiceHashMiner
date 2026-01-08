@@ -27,11 +27,11 @@ namespace MP.GMiner
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.12",
+                BinVersion = "v3.44",
                 ExePath = new List<string> { "", "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.12/gminer_3_12_windows64.zip" // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.44/gminer_3_44_windows64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -45,7 +45,7 @@ namespace MP.GMiner
 
         public override string Name => "GMiner";
 
-        public override Version Version => new Version(19, 1);
+        public override Version Version => new Version(24, 0);
 
 
         public override string Author => "info@nicehash.com";
@@ -82,7 +82,6 @@ namespace MP.GMiner
             {
                 _mappedIDs[gpu.UUID] = minerDeviceId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
-                if (gpu is CUDADevice cuda && cuda.SM_major >= 8) algorithms = algorithms.Where(a => a.FirstAlgorithmType != AlgorithmType.GrinCuckatoo32).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
@@ -111,7 +110,7 @@ namespace MP.GMiner
             {
                 if (_mappedIDs.Count == 0) return;
                 var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --watchdog 0"); // AMD + NVIDIA
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices"); // AMD + NVIDIA
                 var dumpFile = $"d{DateTime.UtcNow.Ticks}.txt";
                 try
                 {

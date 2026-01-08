@@ -1,6 +1,8 @@
 ﻿using NHM.Common;
 using NHMCore.Mining;
+using NHMCore.Nhmws.V4;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NHMCore.Configs
 {
@@ -101,6 +103,9 @@ namespace NHMCore.Configs
             {
                 _useScheduler = value;
                 OnPropertyChanged(nameof(UseScheduler));
+#if NHMWS4
+                _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
             }
         }
 

@@ -94,5 +94,45 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(AdvancedMode));
             }
         }
+        private bool _sendEvents = true;
+        public bool SendEvents
+        {
+            get => _sendEvents;
+            set
+            {
+                _sendEvents = value;
+                OnPropertyChanged(nameof(SendEvents));
+            }
+        }
+        private bool _autoResetOC = true;
+        public bool AutoResetOC
+        {
+            get => _autoResetOC;
+            set
+            {
+                _autoResetOC = value;
+                OnPropertyChanged(nameof(AutoResetOC));
+            }
+        }
+        private bool _enableGPUManagement = true;
+        public bool EnableGPUManagement
+        {
+            get => _enableGPUManagement;
+            set
+            {
+                _enableGPUManagement = value;
+                OnPropertyChanged(nameof(EnableGPUManagement));
+            }
+        }
+        private bool _detectIntegratedDevs = true;
+        public bool DetectIntegratedDevices
+        {
+            get => _detectIntegratedDevs;
+            set
+            {
+                _detectIntegratedDevs = value;
+                OnPropertyChanged(nameof(DetectIntegratedDevices));
+            }
+        }
     }
 }

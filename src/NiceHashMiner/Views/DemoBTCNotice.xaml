@@ -120,7 +120,6 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0">
-            <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
             <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/general-help/how-to-get-nicehash-mining-address" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                 How to create a Mining Address?
@@ -131,16 +130,6 @@
         </TextBlock>
 
         <WrapPanel Grid.Row="5" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button
-                    x:Name="CancelButton"
-                    Style="{DynamicResource CancelDangerButton}"
-                    Visibility="{Binding CancelVisible}"
-                    FontSize="10"
-                    Width="136"
-                    Height="24"
-                    Content="DEMO MINING"
-                    ToolTip="Demo mining "
-                    Click="DemoMiningButtonClicked" />
             <Button
                     x:Name="SaveButton"
                     Style="{DynamicResource OKButton}"

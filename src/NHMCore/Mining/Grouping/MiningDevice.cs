@@ -55,6 +55,8 @@ namespace NHMCore.Mining.Grouping
 
         public AlgorithmContainer GetMostProfitableAlgorithmContainer()
         {
+            var forcedContainer = Algorithms.Where(a => a.IsTesting)?.FirstOrDefault();
+            if (forcedContainer != null) return forcedContainer;
             return Algorithms.FirstOrDefault(a => a.AlgorithmStringID == MostProfitableAlgorithmStringID);
         }
 
@@ -87,7 +89,7 @@ namespace NHMCore.Mining.Grouping
             var mostProfitable = Algorithms.Where(algo => algo.IgnoreUntil <= DateTime.UtcNow)
                 .OrderByDescending(algo => algo.CurrentNormalizedProfit)
                 .FirstOrDefault();
-            if(mostProfitable.CurrentNormalizedProfit <= 0) // no sma yet
+            if(mostProfitable != null && mostProfitable.CurrentNormalizedProfit <= 0) // no sma yet
             {
                 Logger.Warn("MiningDevice", "Profits array is all zeros, selecting algo with best ESTIMATED profit (will switch later if needed).");
                 mostProfitable = Algorithms.Where(algo => algo.IgnoreUntil <= DateTime.UtcNow)

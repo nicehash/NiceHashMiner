@@ -15,8 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NHM.Common.Enums;
 using NHMCore.Configs.ELPDataModels;
-using NHMCore.Utils;
 using Windows.UI;
+using NHMCore.Configs.Managers;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {

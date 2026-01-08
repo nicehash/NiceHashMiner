@@ -4,6 +4,7 @@
     {
         CPU = 0,
         NVIDIA,
-        AMD
+        AMD,
+        INTEL
     }
 }

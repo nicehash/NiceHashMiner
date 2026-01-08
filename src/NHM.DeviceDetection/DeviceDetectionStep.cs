@@ -6,6 +6,7 @@
         WMIVideoControllers,
         NVIDIA_CUDA,
         AMD_OpenCL,
+        INTEL_GPU,
         FAKE
     }
 }

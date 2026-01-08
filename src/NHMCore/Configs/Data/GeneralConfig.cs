@@ -90,6 +90,26 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.AdvancedMode;
             set => MiscSettings.Instance.AdvancedMode = value;
         }
+        public bool SendEvents
+        {
+            get => MiscSettings.Instance.SendEvents;
+            set => MiscSettings.Instance.SendEvents = value;
+        }
+        public bool AutoResetOC
+        {
+            get => MiscSettings.Instance.AutoResetOC;
+            set => MiscSettings.Instance.AutoResetOC = value;
+        }
+        public bool EnableGPUManagement
+        {
+            get => MiscSettings.Instance.EnableGPUManagement;
+            set => MiscSettings.Instance.EnableGPUManagement = value;
+        }
+        public bool DetectIntegratedDevices
+        {
+            get => MiscSettings.Instance.DetectIntegratedDevices;
+            set => MiscSettings.Instance.DetectIntegratedDevices = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -328,11 +348,6 @@ namespace NHMCore.Configs.Data
             get => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring;
             set => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring = value;
         }
-        public bool DisableDevicePowerModeSettings
-        {
-            get => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings;
-            set => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings = value;
-        }
         public bool ShowGPUPCIeBusIDs
         {
             get => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs;
@@ -412,12 +427,14 @@ namespace NHMCore.Configs.Data
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
-            DisableDevicePowerModeSettings = true;
             MineRegardlessOfProfit = true;
 
             AutoUpdateNiceHashMiner2 = false;
             AutoUpdateMinerPlugins = true;
             AdvancedMode = false;
+            SendEvents = true;
+            AutoResetOC = true;
+            EnableGPUManagement = true;
         }
 
         public void SetValues(GeneralConfigOld configOld)
@@ -478,12 +495,14 @@ namespace NHMCore.Configs.Data
             RunAtStartup = configOld.RunAtStartup;
             GUIWindowsAlwaysOnTop = configOld.GUIWindowsAlwaysOnTop;
             DisableDeviceStatusMonitoring = configOld.DisableDeviceStatusMonitoring;
-            DisableDevicePowerModeSettings = configOld.DisableDevicePowerModeSettings;
             MineRegardlessOfProfit = configOld.MineRegardlessOfProfit;
 
             AutoUpdateNiceHashMiner2 = configOld.AutoUpdateNiceHashMiner2;
             AutoUpdateMinerPlugins = configOld.AutoUpdateMinerPlugins;
             AdvancedMode = false;
+            SendEvents = true;
+            AutoResetOC = true;
+            EnableGPUManagement = true;
         }
 
         public void FixSettingBounds()
